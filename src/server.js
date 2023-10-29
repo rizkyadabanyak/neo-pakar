@@ -16,13 +16,24 @@ const authentications = require("./api/authentications");
 const AuthenticationsService = require("./services/postgres/auths/AuthenticationsService");
 const TokenManagerCompany = require("./tokenize/TokenManager");
 
+// permissions
+const permissions = require("./api/permissions");
+const PermissionsService = require("./services/postgres/PermissionsService");
+const PermissionsValidator = require("./validator/permissions");
 
+// roles
+const roles = require("./api/roles");
+const RolesService = require("./services/postgres/RolesService");
+const RolesValidator = require("./validator/roles");
 
 const AuthenticationsValidator = require("./validator/authentications");
 
 const init = async () => {
 
     const usersService = new UsersService();
+    const permissionService = new PermissionsService();
+    const rolesService = new RolesService();
+
     const authenticationsService = new AuthenticationsService();
     const server = Hapi.server({
         port: process.env.PORT,
@@ -83,6 +94,20 @@ const init = async () => {
                 usersService,
                 tokenManager: TokenManagerCompany,
                 validator: AuthenticationsValidator,
+            },
+        },
+        {
+            plugin: permissions,
+            options: {
+                service: permissionService,
+                validator: PermissionsValidator,
+            },
+        },
+        {
+            plugin: roles,
+            options: {
+                service: rolesService,
+                validator: RolesValidator,
             },
         },
         // {

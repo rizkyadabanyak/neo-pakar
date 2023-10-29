@@ -25,7 +25,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.STRING
-    }
+    },
+    status: {
+      type: DataTypes.BOOLEAN
+    },
   }, {
     sequelize,
     modelName: 'Role',

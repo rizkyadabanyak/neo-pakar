@@ -27,7 +27,7 @@ const routes = (handler) => [
   },
   {
     method: "PUT",
-    path: "/updatedToken",
+    path: "/users/updatedToken",
     config: {
       auth: false,
       payload: {
@@ -40,7 +40,15 @@ const routes = (handler) => [
   },
   {
     method: "DELETE",
-    path: "/authentications",
+    path: "/users/logout",
+    config: {
+      auth: false,
+      payload: {
+        parse: true,
+        allow: 'multipart/form-data',
+        multipart: { output: 'stream' },
+      }
+    },
     handler: handler.deleteAuthenticationHandler,
   },
 ];

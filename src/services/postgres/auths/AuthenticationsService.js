@@ -21,7 +21,6 @@ class AuthenticationsService {
       throw new InvariantError("token gagal ditambahkan");
 
     }
-
   }
 
   async verifyRefreshToken(refresh_token) {
@@ -34,18 +33,26 @@ class AuthenticationsService {
     if (!data){
       throw new InvariantError("Refresh token tidak valid");
     }
-
   }
 
   async deleteRefreshToken(token) {
-    await this.verifyRefreshToken(token);
 
-    const query = {
-      text: "DELETE FROM authentications WHERE token = $1",
-      values: [token],
-    };
-
-    await this._pool.query(query);
+    // console.log('sini')
+    // return;
+    const rowsDeleted = await Authentications.destroy({
+      where: {
+        refresh_token : token
+      }
+    });
+    //
+    // await this.verifyRefreshToken(token);
+    //
+    // const query = {
+    //   text: "DELETE FROM authentications WHERE token = $1",
+    //   values: [token],
+    // };
+    //
+    // await this._pool.query(query);
   }
 }
 
