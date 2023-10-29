@@ -1,46 +1,103 @@
-const ClientError = require("../../../exceptions/ClientError");
+const ClientError = require("../../exceptions/ClientError");
+const { jwtDecode } = require("jwt-decode");
 
 class AuthenticationsHandler {
-  constructor(authenticationsService, companiesService, tokenManager, validator) {
+  constructor(authenticationsService, usersService, tokenManager, validator) {
     this._authenticationsService = authenticationsService;
-    this._companiesService = companiesService;
+    this._usersService = usersService;
     this._tokenManager = tokenManager;
     this._validator = validator;
 
-    this.postAuthenticationHandler = this.postAuthenticationHandler.bind(this);
+    this.registerUserCompanyHandler = this.registerUserCompanyHandler.bind(this);
+    this.loginAuthenticationHandler = this.loginAuthenticationHandler.bind(this);
     this.putAuthenticationHandler = this.putAuthenticationHandler.bind(this);
     this.deleteAuthenticationHandler = this.deleteAuthenticationHandler.bind(this);
   }
 
-  async postAuthenticationHandler(request, h) {
-    try {
-      this._validator.validatePostAuthenticationPayload(request.payload);
 
+  async registerUserCompanyHandler(request, h) {
+    try {
+      this._validator.validateUserPayload(request.payload);
+
+      // return h.response({
+      //   status: request.payload,
+      // });
+
+      const { name,username,confPassword , email,address, password } = request.payload;
+
+      const userId = await this._usersService.addUserCompany({ name,username,confPassword , email,address, password });
+
+      const response = h.response({
+        status: "success",
+        message: "User berhasil ditambahkan",
+        data: {
+          userId,
+        },
+      });
+      response.code(201);
+      return response;
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
+
+
+  async loginAuthenticationHandler(request, h) {
+    try {
+
+
+      // console.log('sini');
+
+      this._validator.validatePostAuthenticationPayload(request.payload);
+      // return h.response({
+      //   status: request.payload,
+      // });
       const { username, password } = request.payload;
 
-      const company = await this._companiesService.verifyCompanyCredential(username, password);
+      const data = await this._usersService.verifyUserCredential(username, password);
 
-      const id = company.company_id;
-      const name = company.company_name;
-      const email = company.company_email;
-      const username_as = company.company_username;
-      const as = 'company';
+      const id = data.id;
+      const name = data.name;
+      const email = data.email;
+      const username_as = data.username;
+      const role = data.role.name;
+      const as = role;
+
+
+      // const expiresIn = 3600; // Contoh: token berlaku selama 1 jam
+      const expiresIn = parseInt(process.env.TIME_JWT);
 
       const paylod = {
-        id, name, email,as,username_as
+        id, name, email,as,username_as,exp: Math.floor(Date.now() / 1000) + expiresIn
       };
 
       const accessToken = this._tokenManager.generateAccessToken(paylod);
       const refreshToken = this._tokenManager.generateRefreshToken(paylod);
 
-      // return console.log(accessToken);
 
-      await this._authenticationsService.addRefreshToken(id,accessToken,refreshToken);
+      await this._authenticationsService.addRefreshToken(refreshToken);
 
       const response = h.response({
         status: "success",
         message: "Anda berhasil login",
         data: {
+          login_as : as,
           accessToken,
           refreshToken,
         },
@@ -71,13 +128,33 @@ class AuthenticationsHandler {
 
   async putAuthenticationHandler(request, h) {
     try {
+      const { refreshToken } = request.payload;
+      // const decoded = jwtDecode(refreshToken);
+      //
+      // const role = decoded.as;
+
       this._validator.validatePutAuthenticationPayload(request.payload);
 
-      const { refreshToken } = request.payload;
-      await this._authenticationsService.verifyRefreshToken(refreshToken);
-      const { id } = this._tokenManager.verifyRefreshToken(refreshToken);
+      // const expiresIn = 3600; // Contoh: token berlaku selama 1 jam
+      const expiresIn = parseInt(process.env.TIME_JWT);
+      let exp = Math.floor(Date.now() / 1000) + expiresIn;
 
-      const accessToken = this._tokenManager.generateAccessToken({ id });
+      await this._authenticationsService.verifyRefreshToken(refreshToken);
+
+      const data = this._tokenManager.verifyRefreshToken(refreshToken);
+
+      const id = data.id;
+      const name = data.name;
+      const email = data.email;
+      const username_as = data.username_as;
+      const as = data.as;
+
+      const paylod = {
+        id, name, email,as,username_as,exp
+      };
+
+      const accessToken = this._tokenManager.generateAccessToken(paylod);
+
       return {
         status: "success",
         message: "Access Token berhasil diperbarui",

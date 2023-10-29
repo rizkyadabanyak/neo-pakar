@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const AuthenticationError = require("../../exceptions/AuthenticationError");
-const {Candidate} = require("../../models/Candidate");
+const {Candidate} = require("../../modelss/Candidate");
 const slug= require('slug');
 
 class CandidatesService {

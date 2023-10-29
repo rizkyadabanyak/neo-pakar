@@ -4,30 +4,83 @@ const bcrypt = require("bcrypt");
 const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const AuthenticationError = require("../../exceptions/AuthenticationError");
-const {Admin} = require("../../models/Admin");
+const slug = require("slug");
+// const users = require("../../models/user");
+const db = require("../../models");
+const Role = db.Role;
+const User = db.User;
+
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
+
 
 class UsersService {
 
-  async addUser({ username, password, fullname }) {
+  async addUserCompany({ name,username,confPassword , email,address, password }) {
+
+    await this.verifyNewUserCompany(username,email);
 
 
-    if (!result.rows.length) {
+    // return console.log(email)
+    // return ;
+
+    const id = `user-${nanoid(16)}`;
+
+    const salt = await bcrypt.genSalt();
+    const hashPassword = await bcrypt.hash(password, salt);
+    const slug_data = slug(name, '_');
+
+    try {
+      const company = await User.create({
+        role_id: 2,
+        full_name: name,
+        slug: slug_data,
+        username: username,
+        email: email,
+        address: address,
+        password: hashPassword
+      });
+
+      return company.id;
+
+    }catch (e) {
+
+      console.log(e)
       throw new InvariantError("User gagal ditambahkan");
+
     }
-    return result.rows[0].id;
   }
 
-  async verifyNewUsername(username) {
-    const query = {
-      text: "SELECT username FROM users WHERE username = $1",
-      values: [username],
-    };
+  async verifyNewUserCompany(username,email) {
 
-    const result = await this._pool.query(query);
+    // const data = await User.findAll();
+    // const data = await User.findAll({ include: { association: 'role' } });
 
-    if (result.rows.length > 0) {
+
+    const cek_username = await User.findOne({ where: { username: username } });
+    const cek_email = await User.findOne({ where: { email: email } });
+
+
+    if (cek_username) {
       throw new InvariantError("Gagal menambahkan user. Username sudah digunakan.");
     }
+
+    if (cek_email) {
+      throw new InvariantError("Gagal menambahkan user. Email sudah digunakan.");
+    }
+  }
+
+  async getUserAll(userId) {
+    const data = await User.findAll();
+
+    try {
+      return data;
+
+    }catch (e) {
+      throw new NotFoundError("terjadi kesalahan");
+
+    }
+
   }
 
   async getUserById(userId) {
@@ -46,24 +99,24 @@ class UsersService {
   }
 
   async verifyUserCredential(username, password) {
-    const query = {
-      text: "SELECT id, password FROM users WHERE username = $1",
-      values: [username],
-    };
-    const result = await this._pool.query(query);
 
-    if (!result.rows.length) {
-      throw new AuthenticationError("Kredensial yang Anda berikan salah");
+    const data = await User.findOne({
+      where: { username: username },
+      include: { association: 'role' }
+    });
+
+
+
+    if (!data) {
+      throw new InvariantError("Kredensial yang Anda berikan salah");
     }
 
-    const { id, password: hashedPassword } = result.rows[0];
-
-    const match = await bcrypt.compare(password, hashedPassword);
+    const match = await bcrypt.compare(password, data.password);
 
     if (!match) {
       throw new AuthenticationError("Kredensial yang Anda berikan salah");
     }
-    return id;
+    return data;
   }
 
   async getUsersByUsername(username) {

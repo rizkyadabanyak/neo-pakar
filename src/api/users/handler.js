@@ -7,6 +7,7 @@ class UsersHandler {
     this._validator = validator;
 
     this.postUserHandler = this.postUserHandler.bind(this);
+    this.getUserAllHandler = this.getUserAllHandler.bind(this);
   }
 
   async postUserHandler(request, h) {
@@ -50,11 +51,42 @@ class UsersHandler {
     }
   }
 
+  async getUserAllHandler(request, h) {
+    try {
+      const user = await this._service.getUserAll();
+
+      return {
+        status: "success",
+        data: {
+          user,
+        },
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
+
   async getUserByIdHandler(request, h) {
     try {
       const { id } = request.params;
 
-      const user = await this._service.getUserById(id);
+      const user = await this._service.getUserAll();
 
       return {
         status: "success",

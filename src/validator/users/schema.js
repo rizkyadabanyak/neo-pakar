@@ -1,9 +1,26 @@
 const Joi = require("joi");
 
+
 const UserPayloadSchema = Joi.object({
-  username: Joi.string().required(),
-  password: Joi.string().required(),
-  fullname: Joi.string().required(),
-});
+  username: Joi.string()
+      .alphanum()
+      .min(3)
+      .max(30)
+      .required().messages({
+        'any.required': `username tidak boleh kosong`
+      }),
+  password: Joi.string()
+      .required(),
+  name: Joi.string()
+      .required(),
+  address: Joi.string()
+      .required(),
+  confPassword: Joi.ref(  "password"),
+  email: Joi.string()
+      .email({ minDomainSegments: 2, tlds: { allow: ['com'] } })
+      .required(),
+  phone_number : Joi.number()
+      .required(),
+}).with('password', 'confPassword');
 
 module.exports = { UserPayloadSchema };

@@ -1,7 +1,7 @@
 const routes = (handler) => [
   {
     method: "POST",
-    path: "/users",
+    path: "/users/store",
     config: {
       auth: false,
       payload: {
@@ -11,6 +11,14 @@ const routes = (handler) => [
       }
     },
     handler: handler.postUserHandler,
+  },
+  {
+    method: "GET",
+    path: "/users/getAll",
+    config: {
+      auth: "user_jwt",
+    },
+    handler: handler.getUserAllHandler,
   },
   {
     method: "GET",
