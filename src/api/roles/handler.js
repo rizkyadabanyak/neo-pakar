@@ -1,5 +1,11 @@
 const ClientError = require("../../exceptions/ClientError");
+
+const decodeJWTHelper = require("../../helpers/decodeJWTHelper");
 const permissionsHelper = require("../../helpers/permissionsHelper");
+
+const {jwtDecode} = require("jwt-decode");
+const InvariantError = require("../../exceptions/InvariantError");
+
 class rolesHandler {
   constructor(service, validator) {
 
@@ -15,9 +21,11 @@ class rolesHandler {
 
   async storeRoleHandler(request, h) {
     try {
-      // return h.response({
-      //   status: request.payload,
-      // });
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_create_role"])
 
       this._validator.validateRolesPayload(request.payload);
       const { name, description } = request.payload;
@@ -54,12 +62,14 @@ class rolesHandler {
   }
   async updateRoleHandler(request, h) {
     try {
+
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_update_role"])
+
       const { role_id } = request.params;
-
-      // return h.response({
-      //   status: request.payload,
-      // });
-
       this._validator.validateRolesPayload(request.payload);
       const { name, description } = request.payload;
 
@@ -98,6 +108,12 @@ class rolesHandler {
 
     try {
 
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_show_role"])
+
       const data = await this._service.getRoleAll({
         where: {
           status : true
@@ -134,6 +150,12 @@ class rolesHandler {
     try {
       const { role_id } = request.params;
 
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_show_role"])
+
       const data = await this._service.getRoleById(role_id)
 
       return {
@@ -164,6 +186,11 @@ class rolesHandler {
     try {
       const { role_id } = request.params;
       const { status } = request.payload;
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_delete_role"])
 
       const data = await this._service.deleteById(role_id,status)
 

@@ -77,6 +77,7 @@ class AuthenticationsHandler {
       const email = data.email;
       const username_as = data.username;
       const role = data.role.name;
+      const role_id = data.role.id;
       const as = role;
 
 
@@ -84,7 +85,7 @@ class AuthenticationsHandler {
       const expiresIn = parseInt(process.env.TIME_JWT);
 
       const paylod = {
-        id, name, email,as,username_as,exp: Math.floor(Date.now() / 1000) + expiresIn
+        id, name, email,as,role_id,username_as,exp: Math.floor(Date.now() / 1000) + expiresIn
       };
 
       const accessToken = this._tokenManager.generateAccessToken(paylod);
@@ -129,7 +130,11 @@ class AuthenticationsHandler {
   async putAuthenticationHandler(request, h) {
     try {
       const { refreshToken } = request.payload;
-      // const decoded = jwtDecode(refreshToken);
+
+      // const header = request.headers.authorization;
+      //
+      // const arrayHeader = header.split(" ");
+      // const decoded = jwtDecode(arrayHeader[1]);
       //
       // const role = decoded.as;
 
@@ -148,9 +153,11 @@ class AuthenticationsHandler {
       const email = data.email;
       const username_as = data.username_as;
       const as = data.as;
+      const role_id = data.role_id;
+
 
       const paylod = {
-        id, name, email,as,username_as,exp
+        id, name, email,as,role_id,username_as,exp
       };
 
       const accessToken = this._tokenManager.generateAccessToken(paylod);

@@ -14,12 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Permission.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    role_id: DataTypes.STRING,
+    access: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Permission',
+    tableName: 'permissions'
+
   });
   return Permission;
 };
