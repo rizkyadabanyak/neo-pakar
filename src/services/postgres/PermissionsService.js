@@ -5,7 +5,7 @@ const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const AuthenticationError = require("../../exceptions/AuthenticationError");
 const slug = require("slug");
-// const users = require("../../models/user");
+
 const db = require("../../models");
 const Role = db.Role;
 const Permission = db.Permission;
@@ -16,14 +16,63 @@ const Op = Sequelize.Op;
 
 class PermissionsService {
 
+  async cekDbPermissionOnRole(role_id,data){
+    const result = await Permission.findOne({
+      where:{
+        role_id:role_id,
+        access:data
+      }
+    });
+    return result;
+  }
+  async deletePermissionOnRole(role_id){
+    const result = await Permission.destroy({
+      where:{
+        role_id:role_id,
+      }
+    });
+    return result;
+  }
+
+
+
+
   async addPermission(role_id, access) {
+
+    let create_datas = [];
+
+    for (const data of access){
+
+      const data_cek = await this.cekDbPermissionOnRole(role_id,data)
+
+      if (data_cek){
+        await this.deletePermissionOnRole(role_id)
+      }
+
+      create_datas.push({
+        role_id:role_id,
+        access:data
+      })
+    }
 
 
     try {
-      const data = await Permission.create({
-        role_id: role_id,
-        access: access,
-      });
+      const data = await Permission.bulkCreate(create_datas);
+
+      return data;
+
+    }catch (e) {
+
+      console.log(e)
+      throw new InvariantError("permission gagal ditambahkan");
+
+    }
+  }
+  async getPermissionOnRole() {
+
+
+    try {
+      const data = await Role.findAll({ include: { association: 'permission' } });
 
       return data;
 

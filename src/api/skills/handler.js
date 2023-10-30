@@ -12,29 +12,29 @@ class rolesHandler {
     this._service = service;
     this._validator = validator;
 
-    this.storeRoleHandler = this.storeRoleHandler.bind(this);
-    this.getAllRoleHandler = this.getAllRoleHandler.bind(this);
-    this.getRoleByIdHandler = this.getRoleByIdHandler.bind(this);
-    this.updateRoleHandler = this.updateRoleHandler.bind(this);
+    this.storeSkillHandler = this.storeSkillHandler.bind(this);
+    this.getAllSkillHandler = this.getAllSkillHandler.bind(this);
+    this.getSkillByIdHandler = this.getSkillByIdHandler.bind(this);
+    this.updateSkillHandler = this.updateSkillHandler.bind(this);
     this.deleteByIdHandler = this.deleteByIdHandler.bind(this);
   }
 
-  async storeRoleHandler(request, h) {
+  async storeSkillHandler(request, h) {
     try {
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_create_role"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_skill","can_create_skill"])
 
-      this._validator.validateRolesPayload(request.payload);
+      this._validator.validateSkillsPayload(request.payload);
       const { name, description } = request.payload;
 
-      const data = await this._service.addRole(name, description);
+      const data = await this._service.addSkill(name, description);
 
       const response = h.response({
         status: "success",
-        message: "Role berhasil ditambahkan",
+        message: "Skill berhasil ditambahkan",
         data: data,
       });
       response.code(201);
@@ -60,24 +60,24 @@ class rolesHandler {
       return response;
     }
   }
-  async updateRoleHandler(request, h) {
+  async updateSkillHandler(request, h) {
     try {
 
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_update_role"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_skill","can_update_skill"])
 
-      const { role_id } = request.params;
-      this._validator.validateRolesPayload(request.payload);
+      const { skill_id } = request.params;
+      this._validator.validateSkillsPayload(request.payload);
       const { name, description } = request.payload;
 
-      const data = await this._service.updateRole(role_id, name, description);
+      const data = await this._service.updateSkill(skill_id, name, description);
 
       const response = h.response({
         status: "success",
-        message: "Role berhasil dirubah",
+        message: "Skill berhasil dirubah",
         data: data,
       });
       response.code(201);
@@ -104,17 +104,20 @@ class rolesHandler {
     }
   }
 
-  async getAllRoleHandler(request, h) {
+  async getAllSkillHandler(request, h) {
 
     try {
+
 
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_show_role"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_skill","can_show_skill"])
 
-      const data = await this._service.getRoleAll();
+
+
+      const data = await this._service.getSkillAll();
 
       return {
         status: "success",
@@ -142,17 +145,17 @@ class rolesHandler {
     }
   }
 
-  async getRoleByIdHandler(request, h) {
+  async getSkillByIdHandler(request, h) {
     try {
-      const { role_id } = request.params;
+      const { skill_id } = request.params;
 
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_show_role"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_skill","can_show_skill"])
 
-      const data = await this._service.getRoleById(role_id)
+      const data = await this._service.getSkillById(skill_id)
 
       return {
         status: "success",
@@ -180,20 +183,20 @@ class rolesHandler {
   }
   async deleteByIdHandler(request, h) {
     try {
-      const { role_id } = request.params;
+      const { skill_id } = request.params;
       const { status } = request.payload;
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_delete_role"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_skill","can_delete_skill"])
 
-      const data = await this._service.deleteById(role_id,status)
+      const data = await this._service.deleteById(skill_id,status)
 
       return {
         status: "success",
         data: data,
-        message: "Role berhasil dihapus",
+        message: "Skill berhasil dihapus",
       };
 
     } catch (error) {

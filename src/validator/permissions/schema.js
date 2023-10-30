@@ -1,23 +1,12 @@
 const Joi = require("joi");
 
 const PermissionPayloadSchema = Joi.object({
-  username: Joi.string()
-      .alphanum()
-      .min(3)
-      .max(30)
+
+  role_id: Joi.string()
       .required(),
-  password: Joi.string()
+  access: Joi.string()
       .required(),
-  name: Joi.string()
-      .required(),
-  address: Joi.string()
-      .required(),
-  confPassword: Joi.ref(  "password"),
-  email: Joi.string()
-      .email({ minDomainSegments: 2, tlds: { allow: ['com'] } })
-      .required(),
-  phone_number : Joi.number()
-      .required(),
-}).with('password', 'confPassword');
+
+});
 
 module.exports = { PermissionPayloadSchema };

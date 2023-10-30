@@ -2,25 +2,26 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('permissions', {
+    await queryInterface.createTable('skills', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      role_id: {
-        type: Sequelize.DataTypes.INTEGER,
-        references: {
-          model: {
-            tableName: 'roles',
-          },
-          key: 'id'
-        },
-        allowNull: false
-      },
-      access: {
+      name: {
         type: Sequelize.STRING
+      },
+      slug: {
+        type: Sequelize.STRING
+      },
+      description: {
+        type: Sequelize.STRING
+      },
+      status: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true,
+        unique: true
       },
       createdAt: {
         allowNull: false,
@@ -33,6 +34,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('permissions');
+    await queryInterface.dropTable('skills');
   }
 };

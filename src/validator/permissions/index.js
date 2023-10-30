@@ -2,7 +2,7 @@ const InvariantError = require("../../exceptions/InvariantError");
 const { PermissionPayloadSchema } = require("./schema");
 
 const PermissionsValidator = {
-  validateCandidatePayload: (payload) => {
+  validatePermissionPayload: (payload) => {
     const validationResult = PermissionPayloadSchema.validate(payload);
 
     if (validationResult.error) {

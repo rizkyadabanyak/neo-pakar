@@ -26,6 +26,11 @@ const roles = require("./api/roles");
 const RolesService = require("./services/postgres/RolesService");
 const RolesValidator = require("./validator/roles");
 
+// skills
+const skills = require("./api/skills");
+const SkillsService = require("./services/postgres/SkillsService");
+const SkillsValidator = require("./validator/skills");
+
 const AuthenticationsValidator = require("./validator/authentications");
 
 const init = async () => {
@@ -33,6 +38,7 @@ const init = async () => {
     const usersService = new UsersService();
     const permissionService = new PermissionsService();
     const rolesService = new RolesService();
+    const skillsService = new SkillsService();
 
     const authenticationsService = new AuthenticationsService();
     const server = Hapi.server({
@@ -108,6 +114,12 @@ const init = async () => {
             options: {
                 service: rolesService,
                 validator: RolesValidator,
+            },
+        },{
+            plugin: skills,
+            options: {
+                service: skillsService,
+                validator: SkillsValidator,
             },
         },
         // {
