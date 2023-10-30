@@ -40,7 +40,7 @@ class SkillsService {
 
     }
   }
-  async updateSkill(skill_id, name, description) {
+  async updateSkill(id, name, description) {
 
 
     await this.verifyNewSkill(name );
@@ -56,7 +56,7 @@ class SkillsService {
           },
           {
             where: {
-            id : skill_id
+            id : id
             }
           }
       );
@@ -70,7 +70,7 @@ class SkillsService {
 
     }
   }
-  async deleteById(skill_id, status) {
+  async deleteById(id, status) {
 
     // console.log(status);
     // return ;
@@ -82,7 +82,7 @@ class SkillsService {
           },
           {
             where: {
-            id : skill_id
+            id : id
             }
           }
       );

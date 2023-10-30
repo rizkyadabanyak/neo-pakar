@@ -7,25 +7,25 @@ const AuthenticationError = require("../../exceptions/AuthenticationError");
 const slug = require("slug");
 // const users = require("../../models/user");
 const db = require("../../models");
-const Qualification = db.Qualification;
+const TimeExperience = db.TimeExperience;
 const User = db.User;
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 
 
-class QualificaitonsService {
+class TimeExperiencesService {
 
-  async addQualification(name,description) {
+  async addTimeExperience(name,description) {
 
-    await this.verifyNewQualification(name);
+    await this.verifyNewTimeExperience(name);
 
     const slug_data = slug(name, '-');
 
 
 
     try {
-      const data = await Qualification.create({
+      const data = await TimeExperience.create({
         name: name,
         slug: slug_data,
         description: description,
@@ -40,14 +40,14 @@ class QualificaitonsService {
 
     }
   }
-  async updateQualification(id, name, description) {
+  async updateTimeExperience(id, name, description) {
 
 
-    await this.verifyNewQualification(name );
+    await this.verifyNewTimeExperience(name );
     const slug_data = slug(name, '_');
 
     try {
-      const data = await Qualification.update(
+      const data = await TimeExperience.update(
           {
             // Define the new values you want to set
             name: name,
@@ -66,7 +66,7 @@ class QualificaitonsService {
     }catch (e) {
 
       console.log(e)
-      throw new InvariantError("Qualification gagal ditambahkan");
+      throw new InvariantError("TimeExperience gagal ditambahkan");
 
     }
   }
@@ -75,7 +75,7 @@ class QualificaitonsService {
     // console.log(status);
     // return ;
     try {
-      const data = await Qualification.update(
+      const data = await TimeExperience.update(
           {
             // Define the new values you want to set
             status: status,
@@ -97,20 +97,20 @@ class QualificaitonsService {
     }
   }
 
-  async verifyNewQualification(name ) {
+  async verifyNewTimeExperience(name ) {
 
-    const cek_username = await Qualification.findOne({ where: { name: name } });
+    const cek_username = await TimeExperience.findOne({ where: { name: name } });
     if (cek_username) {
-      throw new InvariantError("Gagal menambahkan Qualification. qualification sudah ada.");
+      throw new InvariantError("Gagal menambahkan TimeExperience. TimeExperience sudah ada.");
     }
   }
 
-  async getQualificationAll() {
+  async getTimeExperienceAll() {
 
 
     try {
 
-      const data = await Qualification.findAll({
+      const data = await TimeExperience.findAll({
         where : {
           status : true
         }
@@ -127,14 +127,14 @@ class QualificaitonsService {
 
   }
 
-  async getQualificationById(id) {
-    const data = await Qualification.findOne({ where: { id: id } });
+  async getTimeExperienceById(id) {
+    const data = await TimeExperience.findOne({ where: { id: id } });
     if (!data) {
-      throw new NotFoundError("Qualification tidak ditemukan");
+      throw new NotFoundError("TimeExperience tidak ditemukan");
     }
     return data;
   }
 
 }
 
-module.exports = QualificaitonsService;
+module.exports = TimeExperiencesService;

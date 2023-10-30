@@ -40,7 +40,7 @@ class JobTypeWorksServiceService {
 
     }
   }
-  async updateJobTypeWork(skill_id, name, description) {
+  async updateJobTypeWork(id, name, description) {
 
 
     await this.verifyNewJobTypeWork(name );
@@ -56,7 +56,7 @@ class JobTypeWorksServiceService {
           },
           {
             where: {
-            id : skill_id
+            id : id
             }
           }
       );
@@ -70,7 +70,7 @@ class JobTypeWorksServiceService {
 
     }
   }
-  async deleteById(skill_id, status) {
+  async deleteById(id, status) {
 
     // console.log(status);
     // return ;
@@ -82,7 +82,7 @@ class JobTypeWorksServiceService {
           },
           {
             where: {
-            id : skill_id
+            id : id
             }
           }
       );
