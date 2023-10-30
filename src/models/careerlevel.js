@@ -14,12 +14,23 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   CareerLevel.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING
+    },
+    slug: {
+      type: DataTypes.STRING,
+      unique: true
+    },
+    description: {
+      type: DataTypes.STRING
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+    },
   }, {
     sequelize,
     modelName: 'CareerLevel',
+    tableName: 'career_levels',
   });
   return CareerLevel;
 };

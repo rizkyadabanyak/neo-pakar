@@ -14,12 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   CandidateDetail.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    cv: {
+      type: DataTypes.STRING
+    },
+    address: {
+      type: DataTypes.TEXT
+    },
+    phone_number: {
+      type: DataTypes.INTEGER
+    },
   }, {
     sequelize,
     modelName: 'CandidateDetail',
+    tableName: 'candidate_details',
   });
   return CandidateDetail;
 };

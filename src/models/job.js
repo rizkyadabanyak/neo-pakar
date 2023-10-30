@@ -14,9 +14,25 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Job.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    description: {
+      type: DataTypes.TEXT
+    },
+    start_date: {
+      type: DataTypes.DATE
+    },
+    end_date: {
+      type: DataTypes.DATE
+    },
+    salary_max: {
+      type: DataTypes.INTEGER
+    },
+    salary_min: {
+      type: DataTypes.INTEGER
+    },
+    status: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   }, {
     sequelize,
     modelName: 'Job',

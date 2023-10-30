@@ -14,12 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   CombinationCandidateSkill.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    candidate_id: DataTypes.INTEGER,
+    skill_id: DataTypes.INTEGER,
   }, {
     sequelize,
-    modelName: 'CombinationCandidateSkill',
+    modelName: 'combination_candidate_skills',
   });
   return CombinationCandidateSkill;
 };

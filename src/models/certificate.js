@@ -14,12 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Certificate.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    title: {
+      type: DataTypes.STRING
+    },
+    level: {
+      type: DataTypes.STRING
+    },
+    file: {
+      type: DataTypes.STRING
+    },
   }, {
     sequelize,
     modelName: 'Certificate',
+    tableName: 'certificate',
   });
   return Certificate;
 };

@@ -9,6 +9,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      company_detail_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        references: {
+          model: {
+            tableName: 'company_details',
+          },
+          key: 'id'
+        },
+        allowNull: false
+      },
       job_type_work_id: {
         type: Sequelize.DataTypes.INTEGER,
         references: {

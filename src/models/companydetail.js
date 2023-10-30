@@ -14,9 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   CompanyDetail.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    email: DataTypes.STRING
+    address: {
+      type: DataTypes.TEXT
+    },
+    about_company: {
+      type: DataTypes.TEXT
+    },
+    phone_number: {
+      type: DataTypes.INTEGER
+    },
+    status_disband: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   }, {
     sequelize,
     modelName: 'CompanyDetail',
