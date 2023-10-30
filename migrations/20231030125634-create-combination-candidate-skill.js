@@ -2,35 +2,32 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('company_details', {
+    await queryInterface.createTable('combination_candidate_skills', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      user_id: {
+      candidate_id: {
         type: Sequelize.DataTypes.INTEGER,
         references: {
           model: {
-            tableName: 'users',
+            tableName: 'candidate_details',
           },
           key: 'id'
         },
         allowNull: false
       },
-      address: {
-        type: Sequelize.TEXT
-      },
-      about_company: {
-        type: Sequelize.TEXT
-      },
-      phone_number: {
-        type: Sequelize.INTEGER
-      },
-      status_disband: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      skill_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        references: {
+          model: {
+            tableName: 'skills',
+          },
+          key: 'id'
+        },
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -43,6 +40,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('company_details');
+    await queryInterface.dropTable('combination_candidate_skills');
   }
 };

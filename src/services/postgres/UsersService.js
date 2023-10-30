@@ -28,7 +28,7 @@ class UsersService {
 
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
-    const slug_data = slug(name, '_');
+    const slug_data = slug(name, '-');
 
     try {
       const company = await User.create({

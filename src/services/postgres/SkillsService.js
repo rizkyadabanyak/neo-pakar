@@ -20,7 +20,7 @@ class SkillsService {
 
     await this.verifyNewSkill(name);
 
-    const slug_data = slug(name, '_');
+    const slug_data = slug(name, '-');
 
 
 

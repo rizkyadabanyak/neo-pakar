@@ -33,6 +33,9 @@ module.exports = {
       full_name: {
         type: Sequelize.STRING
       },
+      img: {
+        type: Sequelize.STRING
+      },
       status: {
         type: Sequelize.BOOLEAN,
         defaultValue: true
