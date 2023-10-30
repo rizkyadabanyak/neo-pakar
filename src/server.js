@@ -16,20 +16,32 @@ const authentications = require("./api/authentications");
 const AuthenticationsService = require("./services/postgres/auths/AuthenticationsService");
 const TokenManagerCompany = require("./tokenize/TokenManager");
 
-// permissions
+// permissions master
 const permissions = require("./api/permissions");
 const PermissionsService = require("./services/postgres/PermissionsService");
 const PermissionsValidator = require("./validator/permissions");
 
-// roles
+// roles master
 const roles = require("./api/roles");
 const RolesService = require("./services/postgres/RolesService");
 const RolesValidator = require("./validator/roles");
 
-// skills
+// skills master
 const skills = require("./api/skills");
 const SkillsService = require("./services/postgres/SkillsService");
 const SkillsValidator = require("./validator/skills");
+
+// qualifications master
+const qualifications = require("./api/qualifications");
+const QualificationsService = require("./services/postgres/QualificaitonsService");
+const QualificationsValidator = require("./validator/qualifications");
+
+// jobTypeWorks master
+const jobTypeWorks = require("./api/jobTypeWorks");
+const JobTypeWorksService = require("./services/postgres/JobTypeWorksService");
+
+// base master validator
+const MasterDataValidator = require("./validator/masterData");
 
 const AuthenticationsValidator = require("./validator/authentications");
 
@@ -39,6 +51,8 @@ const init = async () => {
     const permissionService = new PermissionsService();
     const rolesService = new RolesService();
     const skillsService = new SkillsService();
+    const qualificationsService = new QualificationsService();
+    const jobTypeWorksService = new JobTypeWorksService();
 
     const authenticationsService = new AuthenticationsService();
     const server = Hapi.server({
@@ -120,6 +134,18 @@ const init = async () => {
             options: {
                 service: skillsService,
                 validator: SkillsValidator,
+            },
+        },{
+            plugin: qualifications,
+            options: {
+                service: qualificationsService,
+                validator: QualificationsValidator,
+            },
+        },{
+            plugin: jobTypeWorks,
+            options: {
+                service: jobTypeWorksService,
+                validator: MasterDataValidator,
             },
         },
         // {

@@ -13,7 +13,8 @@ const permissionsHelper = {
             master_role : ['can_show_role','can_create_role','can_update_role','can_delete_role','can_all_operate_role'],
             master_skill : ['can_show_skill','can_create_skill','can_update_skill','can_delete_skill','can_all_operate_skill'],
             master_permission : ['can_show_permission','can_set_permission','can_all_operate_permission'],
-            master_category : ['can_show_category','can_create_category','can_update_category','can_delete_category','can_all_operate_category'],
+            master_qualification : ['can_show_qualification','can_create_qualification','can_update_qualification','can_delete_qualification','can_all_operate_qualification'],
+            master_job_type_work : ['can_show_job_type_work','can_create_job_type_work','can_update_job_type_work','can_delete_job_type_work','can_all_operate_job_type_work'],
         };
 
         return data
