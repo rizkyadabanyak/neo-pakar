@@ -18,6 +18,10 @@ module.exports = {
       phone_number: {
         type: Sequelize.INTEGER
       },
+      status_completed: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

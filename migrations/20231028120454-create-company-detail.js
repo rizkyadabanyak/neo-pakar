@@ -28,6 +28,10 @@ module.exports = {
       phone_number: {
         type: Sequelize.INTEGER
       },
+      status_completed: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       status_disband: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,

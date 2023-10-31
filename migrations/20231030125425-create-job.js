@@ -69,10 +69,12 @@ module.exports = {
         type: Sequelize.DATE
       },
       salary_max: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       salary_min: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue: 0
       },
       status: {
         type: Sequelize.BOOLEAN,
@@ -80,7 +82,7 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,

@@ -25,7 +25,7 @@ class timeExperienceHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_create_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_time_experience","can_create_time_experience"])
 
       this._validator.validateMasterDataPayload(request.payload);
       const { name, description } = request.payload;
@@ -67,7 +67,7 @@ class timeExperienceHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_update_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_time_experience","can_update_time_experience"])
 
       const { time_experience_id } = request.params;
       this._validator.validateMasterDataPayload(request.payload);
@@ -113,7 +113,7 @@ class timeExperienceHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_show_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_time_experience","can_show_time_experience"])
 
 
 
@@ -153,7 +153,7 @@ class timeExperienceHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_show_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_time_experience","can_show_time_experience"])
 
       const data = await this._service.getTimeExperienceById(time_experience_id)
 
@@ -189,7 +189,7 @@ class timeExperienceHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_delete_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_time_experience","can_delete_time_experience"])
 
       const data = await this._service.deleteById(time_experience_id,status)
 

@@ -25,7 +25,7 @@ class careerLevelHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_create_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_career_level","can_create_career_level"])
 
       this._validator.validateMasterDataPayload(request.payload);
       const { name, description } = request.payload;
@@ -67,7 +67,7 @@ class careerLevelHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_update_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_career_level","can_update_career_level"])
 
       const { career_level_id } = request.params;
       this._validator.validateMasterDataPayload(request.payload);
@@ -113,7 +113,7 @@ class careerLevelHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_show_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_career_level","can_show_career_level"])
 
 
 
@@ -153,7 +153,7 @@ class careerLevelHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_show_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_career_level","can_show_career_level"])
 
       const data = await this._service.getCareerLevelById(career_level_id)
 
@@ -189,7 +189,7 @@ class careerLevelHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_timeExperience","can_delete_timeExperience"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_career_level","can_delete_career_level"])
 
       const data = await this._service.deleteById(career_level_id,status)
 
