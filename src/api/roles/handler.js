@@ -146,11 +146,6 @@ class rolesHandler {
 
     try {
 
-      const header = request.headers.authorization;
-      const decodeJwt = decodeJWTHelper.decode(header);
-      const decode_role_id = decodeJwt.role_id;
-
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_show_role"])
 
       const data = await this._service.getRoleAll(false);
 
