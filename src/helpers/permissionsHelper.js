@@ -17,8 +17,9 @@ const permissionsHelper = {
             master_job_type_work : ['can_show_job_type_work','can_create_job_type_work','can_update_job_type_work','can_delete_job_type_work','can_all_operate_job_type_work'],
             master_time_experience : ['can_show_time_experience','can_create_time_experience','can_update_time_experience','can_delete_time_experience','can_all_operate_time_experience'],
             master_career_level : ['can_show_career_level','can_create_career_level','can_update_career_level','can_delete_career_level','can_all_operate_career_level'],
+            master_job : ['can_show_job','can_create_job','can_update_job','can_delete_job','can_all_operate_job'],
         };
-        return datacareer_level
+        return data;
     },
 
     cekPermission: async(role_id,permission) =>{
