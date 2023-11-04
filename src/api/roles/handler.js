@@ -14,6 +14,7 @@ class rolesHandler {
 
     this.storeRoleHandler = this.storeRoleHandler.bind(this);
     this.getAllRoleHandler = this.getAllRoleHandler.bind(this);
+    this.getAllRoleNoAuthHandler = this.getAllRoleNoAuthHandler.bind(this);
     this.getRoleByIdHandler = this.getRoleByIdHandler.bind(this);
     this.updateRoleHandler = this.updateRoleHandler.bind(this);
     this.deleteByIdHandler = this.deleteByIdHandler.bind(this);
@@ -114,7 +115,44 @@ class rolesHandler {
 
       await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_show_role"])
 
-      const data = await this._service.getRoleAll();
+      const data = await this._service.getRoleAll(true);
+
+      return {
+        status: "success",
+        data: data,
+      };
+
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
+  async getAllRoleNoAuthHandler(request, h) {
+
+    try {
+
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_show_role"])
+
+      const data = await this._service.getRoleAll(false);
 
       return {
         status: "success",

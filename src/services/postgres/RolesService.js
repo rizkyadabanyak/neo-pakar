@@ -99,16 +99,31 @@ class RolesService {
     }
   }
 
-  async getRoleAll(userId) {
+  async getRoleAll(auth) {
 
 
     try {
+      let data = null;
+      if (auth) {
+        data = await Role.findAll({
+          where : {
+            status : true
+          }
+        });
+      }else {
+        data = await Role.findAll({
+          where : {
+            status : true,
+            name: {
+              [Op.and]: [
+                { [Op.ne]:'admin'}, // Greater than 25
+                { [Op.ne]:'company_employee'}, // Less than 40
+              ],
+            },
+          }
+        });
+      }
 
-      const data = await Role.findAll({
-        where : {
-          status : true
-        }
-      });
 
 
       return data;

@@ -1,5 +1,14 @@
 const ClientError = require("../../exceptions/ClientError");
 const { jwtDecode } = require("jwt-decode");
+const { SNSClient, PublishCommand,CheckIfPhoneNumberIsOptedOutCommand  } = require('@aws-sdk/client-sns');
+
+const accountSid = 'AC5eeb4158766e7dde48a4954d34266c49';
+const authToken = '80196ccdc32a0a4eff26fbb71458fffb';
+const client = require('twilio')(accountSid, authToken);
+
+
+require('dotenv').config();
+var AWS = require('aws-sdk');
 
 class AuthenticationsHandler {
   constructor(authenticationsService, usersService, tokenManager, validator) {
@@ -14,18 +23,83 @@ class AuthenticationsHandler {
     this.deleteAuthenticationHandler = this.deleteAuthenticationHandler.bind(this);
   }
 
+  async sendSMSMessage(sns, params) {
+    AWS.config.update({
+      region: process.env.REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY, // AWS access key from environment variables
+        secretAccessKey: process.env.AWS_SECRET_KEY // AWS secret key from environment variables
+      }
+    });
 
+// Create publish parameters
+    var params = {
+      Message: 'xxzcaq', /* required */
+      PhoneNumber: '+62895627543357',
+    };
+
+// Create promise and SNS service object
+    var publishTextPromise = new AWS.SNS({apiVersion: '2010-03-31'}).publish(params).promise();
+
+// Handle promise's fulfilled/rejected states
+    publishTextPromise.then(
+        function(data) {
+          console.log("MessageID is " + data.MessageId);
+        }).catch(
+        function(err) {
+          console.error(err, err.stack);
+        });
+  }
+  async sendSMSMessageTwillo(phone_number) {
+
+    const randomDigit = Math.floor(10000 + Math.random() * 99999);
+    // return randomDigit;
+
+
+    // return job;
+
+    const removeNOL = phone_number.substring(1);
+
+    // return removeNOL;
+
+    try {
+      client.messages
+          .create({
+            body: 'your code '+randomDigit,
+            from: 'whatsapp:+14155238886',
+            to: 'whatsapp:+62'+ removeNOL
+          });
+
+      return {
+        message : 'success send otp',
+        status : "success",
+        statusCode : 200
+
+      }
+
+    } catch (error) {
+
+      console.log(error);
+      return{
+        message : error,
+        data : null,
+        status : "danger",
+        statusCode : 400
+
+      }
+    }
+
+  }
   async registerUserCompanyHandler(request, h) {
     try {
+
       this._validator.validateUserPayload(request.payload);
 
-      // return h.response({
-      //   status: request.payload,
-      // });
+      const { name,username,confPassword , email,address, password,phone_number,as,role_id } = request.payload;
 
-      const { name,username,confPassword , email,address, password } = request.payload;
+      // this.sendSMSMessageTwillo(phone_number);
 
-      const userId = await this._usersService.addUserCompany({ name,username,confPassword , email,address, password });
+      const userId = await this._usersService.addUserCompany({ name,username,confPassword , email,address, password,as,role_id });
 
       const response = h.response({
         status: "success",
@@ -34,8 +108,10 @@ class AuthenticationsHandler {
           userId,
         },
       });
+
       response.code(201);
       return response;
+
     } catch (error) {
       if (error instanceof ClientError) {
         const response = h.response({

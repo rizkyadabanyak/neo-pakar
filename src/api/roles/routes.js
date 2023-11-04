@@ -38,13 +38,22 @@ const routes = (handler) => {
         auth: "user_jwt",
       },
       handler: handler.deleteByIdHandler,
-    },{
+    },
+    {
       method: "GET",
       path: "/roles/getAllData",
       config: {
         auth: "user_jwt",
       },
       handler: handler.getAllRoleHandler,
+    },
+    {
+      method: "GET",
+      path: "/roles/getAllData/noAuth",
+      config: {
+        auth: false,
+      },
+      handler: handler.getAllRoleNoAuthHandler,
     },
   ];
 };

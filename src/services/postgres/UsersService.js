@@ -16,7 +16,7 @@ const Op = Sequelize.Op;
 
 class UsersService {
 
-  async addUserCompany({ name,username,confPassword , email,address, password }) {
+  async addUserCompany({ name,username,confPassword , email,address, password,as,role_id }) {
 
     await this.verifyNewUserCompany(username,email);
 
@@ -30,9 +30,11 @@ class UsersService {
     const hashPassword = await bcrypt.hash(password, salt);
     const slug_data = slug(name, '-');
 
+
+
     try {
       const company = await User.create({
-        role_id: 2,
+        role_id: role_id,
         full_name: name,
         slug: slug_data,
         username: username,

@@ -39,12 +39,14 @@ const UserPayloadSchema = Joi.object({
         'string.empty': `name tidak boleh kosong`,
         'any.required': `name tidak boleh kosong`,
       }),
-  address: Joi.string()
-      .required()
-      .messages({
-        'string.empty': `address tidak boleh kosong`,
-        'any.required': `address tidak boleh kosong`,
-      }),
+    role_id: Joi.string()
+      .required(),
+  // address: Joi.string()
+  //     .required()
+  //     .messages({
+  //       'string.empty': `address tidak boleh kosong`,
+  //       'any.required': `address tidak boleh kosong`,
+  //     }),
   confPassword: Joi.string()
       .valid(Joi.ref('password'))
       .required()

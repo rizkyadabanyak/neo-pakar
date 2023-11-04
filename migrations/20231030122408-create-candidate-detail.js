@@ -9,6 +9,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      user_id: {
+        type: Sequelize.DataTypes.INTEGER,
+        references: {
+          model: {
+            tableName: 'users',
+          },
+          key: 'id'
+        },
+        allowNull: false
+      },
       cv: {
         type: Sequelize.STRING
       },
