@@ -14,7 +14,7 @@ const routes = (handler) => [
   },
   {
     method: "POST",
-    path: "/users/register/company",
+    path: "/users/register",
     config: {
       auth: false,
       payload: {
