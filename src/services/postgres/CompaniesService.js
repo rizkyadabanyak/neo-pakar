@@ -5,8 +5,37 @@ const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const AuthenticationError = require("../../exceptions/AuthenticationError");
 const slug= require('slug');
+const db = require("../../models");
+const Job = db.Job;
+const CompanyDetail = db.CompanyDetail;
+const User = db.User;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 class CompaniesService {
+  async cekCompanyDetail(user_id,) {
+
+    try {
+      const data = await CompanyDetail.findOne({
+        where : {
+          user_id : user_id
+        }
+      })
+
+      if (data){
+        return data;
+      }
+
+      throw new InvariantError("company belum melengkapi profil");
+
+
+    }catch (e) {
+
+      console.log(e)
+      throw new InvariantError("company belum melengkapi profil");
+
+    }
+  }
 
   async addCompany({ name,username,confPassword , email,address, password }) {
 

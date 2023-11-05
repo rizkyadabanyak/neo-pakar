@@ -8,6 +8,7 @@ const slug = require("slug");
 // const users = require("../../models/user");
 const db = require("../../models");
 const Job = db.Job;
+const CompanyDetail = db.CompanyDetail;
 const User = db.User;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
@@ -15,19 +16,32 @@ const Op = Sequelize.Op;
 
 class JobsService {
 
-  async addJob(name,description) {
-
-    await this.verifyNewJob(name);
-
-    const slug_data = slug(name, '-');
+  async addJob(company_detail_id,payload) {
+    //
 
 
+    await this.verifyNewJob(payload);
 
+
+    const slug_data = slug(payload.name, '-');
+    // console.log(slug_data)
+    // return ;
+
+// return ;
     try {
       const data = await Job.create({
-        name: name,
+        company_detail_id: company_detail_id,
+        name: payload.name,
         slug: slug_data,
-        description: description,
+        job_type_work_id: payload.job_type_work_id,
+        qualification_id: payload.qualification_id,
+        career_level_id: payload.career_level_id,
+        time_experiences_id: payload.time_experiences_id,
+        description: payload.description,
+        start_date: payload.start_date,
+        end_date: payload.end_date,
+        salary_max: payload.salary_max,
+        salary_min: payload.salary_min,
       });
 
       return data;
@@ -35,23 +49,30 @@ class JobsService {
     }catch (e) {
 
       console.log(e)
-      throw new InvariantError("User gagal ditambahkan");
+      throw new InvariantError("job gagal ditambahkan");
 
     }
   }
-  async updateJob(id, name, description) {
+  async updateJob(id,company_detail_id, payload) {
 
-
-    await this.verifyNewJob(name );
-    const slug_data = slug(name, '_');
+    await this.verifyNewJob(payload);
+    const slug_data = slug(payload.name, '-');
 
     try {
       const data = await Job.update(
           {
-            // Define the new values you want to set
-            name: name,
+            company_detail_id: company_detail_id,
+            name: payload.name,
             slug: slug_data,
-            description: description,
+            job_type_work_id: payload.job_type_work_id,
+            qualification_id: payload.qualification_id,
+            career_level_id: payload.career_level_id,
+            time_experiences_id: payload.time_experiences_id,
+            description: payload.description,
+            start_date: payload.start_date,
+            end_date: payload.end_date,
+            salary_max: payload.salary_max,
+            salary_min: payload.salary_min,
           },
           {
             where: {
@@ -96,22 +117,42 @@ class JobsService {
     }
   }
 
-  async verifyNewJob(name ) {
+  async verifyNewJob(payload ) {
 
-    const cek_username = await Job.findOne({ where: { name: name } });
-    if (cek_username) {
-      throw new InvariantError("Gagal menambahkan Job. skill sudah ada.");
+
+    // console.log(payload.name)
+    // return ;
+
+    const cek = await Job.findOne({ where: { name: payload.name } });
+
+    if (cek) {
+      throw new InvariantError("Gagal menambahkan Job. job sudah ada.");
     }
   }
 
-  async getJobAll(userId) {
+  async getJobAll(company_detail) {
 
 
     try {
 
       const data = await Job.findAll({
+        include: [
+          {
+            association: 'job_type_work',
+            attributes : ['name'],
+          }, {
+            association: 'qualification',
+            attributes : ['name']
+          },{
+            association: 'career_level',
+            attributes : ['name']
+          },{
+            association: 'time_experiences',
+            attributes : ['name']
+          },
+        ],
         where : {
-          status : true
+          company_detail_id : company_detail.id
         }
       });
 
@@ -119,6 +160,7 @@ class JobsService {
       return data;
 
     }catch (e) {
+
       throw new NotFoundError("terjadi kesalahan");
 
     }
@@ -126,8 +168,50 @@ class JobsService {
   }
 
   async getJobById(id) {
-    const data = await Job.findOne({ where: { id: id } });
+    const data = await Job.findOne({
+      include: [
+        {
+          association: 'job_type_work',
+          attributes : ['name'],
+        }, {
+          association: 'qualification',
+          attributes : ['name']
+        },{
+          association: 'career_level',
+          attributes : ['name']
+        },{
+          association: 'time_experiences',
+          attributes : ['name']
+        },
+      ],
+      where: { id: id }
+    });
     if (!data) {
+      throw new NotFoundError("Job tidak ditemukan");
+    }
+    return data;
+  }
+  async getJobBySlug(slug) {
+    const data = await Job.findOne({
+      include: [
+        {
+          association: 'job_type_work',
+          attributes : ['name'],
+        }, {
+          association: 'qualification',
+          attributes : ['name']
+        },{
+          association: 'career_level',
+          attributes : ['name']
+        },{
+          association: 'time_experiences',
+          attributes : ['name']
+        },
+      ],
+      where: { slug: slug }
+    });
+    if (!data) {
+
       throw new NotFoundError("Job tidak ditemukan");
     }
     return data;

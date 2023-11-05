@@ -26,8 +26,11 @@ const permissionsHelper = {
         const you_permission = await permissionsService.getYouPermission(role_id);
 
         const cek_can_access_everything = you_permission.includes("can_access_everything")
-        const cek_all_permission_access = you_permission.includes(permission[1])
-        const cek = you_permission.includes(permission[2])
+        const cek_all_permission_access = you_permission.includes(permission[0])
+        const cek = you_permission.includes(permission[1])
+
+        // console.log(cek_all_permission_access);
+
 
         if (cek_can_access_everything==false && cek_all_permission_access==false && cek==false){
             throw new Forbidden("anda tidak memiliki access");

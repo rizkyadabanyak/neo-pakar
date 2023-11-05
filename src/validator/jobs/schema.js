@@ -1,7 +1,8 @@
 const Joi = require("joi");
 
 const JobsPayloadSchema = Joi.object({
-  company_detail_id: Joi.required(),
+  // company_detail_id: Joi.required(),
+  name: Joi.required(),
   job_type_work_id: Joi.required(),
   qualification_id: Joi.required(),
   career_level_id: Joi.required(),

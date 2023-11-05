@@ -24,7 +24,8 @@ const routes = (handler) => {
         }
       },
       handler: handler.updateJobHandler,
-    },{
+    },
+    {
       method: "GET",
       path: "/jobs/getById/{job_id}",
       config: {
@@ -32,6 +33,14 @@ const routes = (handler) => {
       },
       handler: handler.getJobByIdHandler,
     },{
+      method: "GET",
+      path: "/jobs/getBySlug/{slug}",
+      config: {
+        auth: "user_jwt",
+      },
+      handler: handler.getJobBySlugHandler,
+    }
+    ,{
       method: "DELETE",
       path: "/jobs/delete/{job_id}",
       config: {
