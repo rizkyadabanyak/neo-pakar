@@ -56,6 +56,8 @@ class JobsService {
   async updateJob(id,company_detail_id, payload) {
 
     await this.verifyNewJob(payload);
+    await this.verifyYouJobCompany(id,company_detail_id);
+
     const slug_data = slug(payload.name, '-');
 
     try {
@@ -90,10 +92,12 @@ class JobsService {
 
     }
   }
-  async deleteById(id, status) {
+  async deleteById(id,company_detail_id, payload, status) {
 
     // console.log(status);
     // return ;
+    await this.verifyYouJobCompany(id,company_detail_id);
+
     try {
       const data = await Job.update(
           {
@@ -129,12 +133,23 @@ class JobsService {
       throw new InvariantError("Gagal menambahkan Job. job sudah ada.");
     }
   }
+  async verifyYouJobCompany(id,company_detail_id ) {
+
+
+    const cek = await Job.findOne({
+      where: {
+        company_detail_id: company_detail_id,
+        id : id
+      }
+    });
+
+    if (!cek) {
+      throw new InvariantError("ini bukan job anda");
+    }
+  }
 
   async getJobAll(company_detail) {
-
-
     try {
-
       const data = await Job.findAll({
         include: [
           {
@@ -155,16 +170,10 @@ class JobsService {
           company_detail_id : company_detail.id
         }
       });
-
-
       return data;
-
     }catch (e) {
-
       throw new NotFoundError("terjadi kesalahan");
-
     }
-
   }
 
   async getJobById(id) {

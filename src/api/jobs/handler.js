@@ -120,8 +120,6 @@ class jobsHandler {
   async getAllJobHandler(request, h) {
 
     try {
-
-
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
@@ -240,10 +238,12 @@ class jobsHandler {
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
+      const user_id = decodeJwt.id;
+      const company_detail = await companiesService.cekCompanyDetail(user_id);
 
       await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_delete_job"])
 
-      const data = await this._service.deleteById(job_id,status)
+      const data = await this._service.deleteById(job_id,company_detail.id, request.payload,status)
 
       return {
         status: "success",

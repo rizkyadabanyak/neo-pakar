@@ -73,9 +73,10 @@ class UsersService {
   }
 
   async getUserAll(userId) {
-    const data = await User.findAll();
 
     try {
+      const data = await User.findAll();
+
       return data;
 
     }catch (e) {
@@ -98,6 +99,23 @@ class UsersService {
     }
 
     return result.rows[0];
+  }
+  async getProfile(decodeJwt) {
+    var data ;
+    try {
+
+      data = await User.findOne({
+        where:{
+          id : decodeJwt.id
+        }
+      });
+
+      return data;
+
+    }catch (e) {
+      throw new NotFoundError("profile tidak ditemukan");
+    }
+
   }
 
   async verifyUserCredential(username, password) {

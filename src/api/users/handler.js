@@ -1,4 +1,7 @@
 const ClientError = require("../../exceptions/ClientError");
+const decodeJWTHelper = require("../../helpers/decodeJWTHelper");
+const permissionsHelper = require("../../helpers/permissionsHelper");
+
 
 class UsersHandler {
   constructor(service, validator) {
@@ -8,6 +11,7 @@ class UsersHandler {
 
     this.postUserHandler = this.postUserHandler.bind(this);
     this.getUserAllHandler = this.getUserAllHandler.bind(this);
+    this.getUserProfileHandler = this.getUserProfileHandler.bind(this);
   }
 
   async postUserHandler(request, h) {
@@ -82,11 +86,17 @@ class UsersHandler {
     }
   }
 
-  async getUserByIdHandler(request, h) {
+  async getUserProfileHandler(request, h) {
     try {
-      const { id } = request.params;
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+      const user_id = decodeJwt.id;
 
-      const user = await this._service.getUserAll();
+      // await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_create_job"])
+
+
+      const user = await this._service.getProfile(decodeJwt);
 
       return {
         status: "success",
