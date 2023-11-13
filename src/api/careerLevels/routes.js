@@ -2,7 +2,7 @@ const routes = (handler) => {
   return [
     {
       method: "POST",
-      path: "/careerLevels/store",
+      path: "/careerLevels",
       config: {
         auth: "user_jwt",
         payload: {
@@ -14,7 +14,7 @@ const routes = (handler) => {
       handler: handler.storeCareerLevelHandler,
     },{
       method: "PUT",
-      path: "/careerLevels/update/{career_level_id}",
+      path: "/careerLevels/{career_level_id}",
       config: {
         auth: "user_jwt",
         payload: {
@@ -26,21 +26,21 @@ const routes = (handler) => {
       handler: handler.updateCareerLevelHandler,
     },{
       method: "GET",
-      path: "/careerLevels/getById/{career_level_id}",
+      path: "/careerLevels/{career_level_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.getCareerLevelByIdHandler,
     },{
       method: "DELETE",
-      path: "/careerLevels/delete/{career_level_id}",
+      path: "/careerLevels/{career_level_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.deleteByIdHandler,
     },{
       method: "GET",
-      path: "/careerLevels/getAllData",
+      path: "/careerLevels",
       config: {
         auth: "user_jwt",
       },

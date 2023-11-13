@@ -2,7 +2,7 @@ const routes = (handler) => {
   return [
     {
       method: "POST",
-      path: "/roles/store",
+      path: "/roles",
       config: {
         auth: "user_jwt",
         payload: {
@@ -14,7 +14,7 @@ const routes = (handler) => {
       handler: handler.storeRoleHandler,
     },{
       method: "PUT",
-      path: "/roles/update/{role_id}",
+      path: "/roles/{role_id}",
       config: {
         auth: "user_jwt",
         payload: {
@@ -26,14 +26,14 @@ const routes = (handler) => {
       handler: handler.updateRoleHandler,
     },{
       method: "GET",
-      path: "/roles/getById/{role_id}",
+      path: "/roles/{role_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.getRoleByIdHandler,
     },{
       method: "DELETE",
-      path: "/roles/delete/{role_id}",
+      path: "/roles/{role_id}",
       config: {
         auth: "user_jwt",
       },
@@ -41,7 +41,7 @@ const routes = (handler) => {
     },
     {
       method: "GET",
-      path: "/roles/getAllData",
+      path: "/roles",
       config: {
         auth: "user_jwt",
       },

@@ -2,7 +2,7 @@ const routes = (handler) => {
   return [
     {
       method: "POST",
-      path: "/jobs/store",
+      path: "/jobs",
       config: {
         auth: "user_jwt",
         payload: {
@@ -14,7 +14,7 @@ const routes = (handler) => {
       handler: handler.storeJobHandler,
     },{
       method: "PUT",
-      path: "/jobs/update/{job_id}",
+      path: "/jobs/{job_id}",
       config: {
         auth: "user_jwt",
         payload: {
@@ -42,14 +42,14 @@ const routes = (handler) => {
     }
     ,{
       method: "DELETE",
-      path: "/jobs/delete/{job_id}",
+      path: "/jobs/{job_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.deleteByIdHandler,
     },{
       method: "GET",
-      path: "/jobs/getAllData",
+      path: "/jobs",
       config: {
         auth: "user_jwt",
       },

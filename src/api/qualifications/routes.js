@@ -2,7 +2,7 @@ const routes = (handler) => {
   return [
     {
       method: "POST",
-      path: "/qualifications/store",
+      path: "/qualifications",
       config: {
         auth: "user_jwt",
         payload: {
@@ -14,7 +14,7 @@ const routes = (handler) => {
       handler: handler.storeQualificationHandler,
     },{
       method: "PUT",
-      path: "/qualifications/update/{qualification_id}",
+      path: "/qualifications/{qualification_id}",
       config: {
         auth: "user_jwt",
         payload: {
@@ -26,21 +26,21 @@ const routes = (handler) => {
       handler: handler.updateQualificationHandler,
     },{
       method: "GET",
-      path: "/qualifications/getById/{qualification_id}",
+      path: "/qualifications/{qualification_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.getQualificationByIdHandler,
     },{
       method: "DELETE",
-      path: "/qualifications/delete/{qualification_id}",
+      path: "/qualifications/{qualification_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.deleteByIdHandler,
     },{
       method: "GET",
-      path: "/qualifications/getAllData",
+      path: "/qualifications",
       config: {
         auth: "user_jwt",
       },

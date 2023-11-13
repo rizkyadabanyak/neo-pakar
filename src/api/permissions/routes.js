@@ -2,7 +2,7 @@ const routes = (handler) => {
   return [
     {
       method: "POST",
-      path: "/permissions/setRole/{role_id}",
+      path: "/permissions/{role_id}",
       config: {
         auth: "user_jwt",
         payload: {
@@ -14,7 +14,7 @@ const routes = (handler) => {
       handler: handler.setRolePermissionHandler,
     },{
       method: "GET",
-      path: "/permissions/getPermissionOnRole",
+      path: "/permissions",
       config: {
         auth: "user_jwt",
       },

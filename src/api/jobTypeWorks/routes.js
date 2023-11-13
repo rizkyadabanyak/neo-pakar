@@ -2,7 +2,7 @@ const routes = (handler) => {
   return [
     {
       method: "POST",
-      path: "/jobTypeWorks/store",
+      path: "/jobTypeWorks",
       config: {
         auth: "user_jwt",
         payload: {
@@ -14,7 +14,7 @@ const routes = (handler) => {
       handler: handler.storeJobTypeWorkHandler,
     },{
       method: "PUT",
-      path: "/jobTypeWorks/update/{job_type_work_id}",
+      path: "/jobTypeWorks/{job_type_work_id}",
       config: {
         auth: "user_jwt",
         payload: {
@@ -26,21 +26,21 @@ const routes = (handler) => {
       handler: handler.updateJobTypeWorkHandler,
     },{
       method: "GET",
-      path: "/jobTypeWorks/getById/{job_type_work_id}",
+      path: "/jobTypeWorks/{job_type_work_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.getJobTypeWorkByIdHandler,
     },{
       method: "DELETE",
-      path: "/jobTypeWorks/delete/{job_type_work_id}",
+      path: "/jobTypeWorks/{job_type_work_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.deleteByIdHandler,
     },{
       method: "GET",
-      path: "/jobTypeWorks/getAllData",
+      path: "/jobTypeWorks",
       config: {
         auth: "user_jwt",
       },
