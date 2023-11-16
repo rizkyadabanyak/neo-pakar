@@ -108,7 +108,6 @@ class rolesHandler {
 
     try {
 
-
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;

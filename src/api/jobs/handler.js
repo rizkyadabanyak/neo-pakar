@@ -31,13 +31,13 @@ class jobsHandler {
       const company_detail = await companiesService.cekCompanyDetail(user_id);
 
       await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_create_job"])
-
+      this._validator.validateJobsPayload(request.payload);
+      //
       // return h.response({
       //   status: "success",
-      //   data: company_detail,
+      //   data: request.payload,
       // });
 
-      this._validator.validateJobsPayload(request.payload);
       // const { name, description } = request.payload;
 
       const data = await this._service.addJob(company_detail.id, request.payload);

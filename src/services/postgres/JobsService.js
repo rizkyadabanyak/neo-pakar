@@ -12,14 +12,36 @@ const CompanyDetail = db.CompanyDetail;
 const User = db.User;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const CombinationJobSkill = db.combination_job_skills;
 
 
 class JobsService {
+  async addSkillJob(job_id,skill){
+
+    // console.log(skill);
+
+
+    try {
+
+      skill.forEach( async (data) => {
+        await CombinationJobSkill.create({
+          job_id: job_id,
+          skill_id: data,
+        });
+
+      });
+
+    }catch (e) {
+
+      console.log(e)
+      throw new InvariantError("job gagal ditambahkan");
+
+    }
+  }
 
   async addJob(company_detail_id,payload) {
     //
-
-
+    // this.addSkillJob(data.id,payload.skill);
     await this.verifyNewJob(payload);
 
 
@@ -43,6 +65,7 @@ class JobsService {
         salary_max: payload.salary_max,
         salary_min: payload.salary_min,
       });
+      this.addSkillJob(data.id,payload.skill);
 
       return data;
 

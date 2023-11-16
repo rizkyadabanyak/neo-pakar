@@ -2,7 +2,7 @@ const routes = (handler) => {
   return [
     {
       method: "POST",
-      path: "/skills/store",
+      path: "/skills",
       config: {
         auth: "user_jwt",
         payload: {
@@ -14,7 +14,7 @@ const routes = (handler) => {
       handler: handler.storeSkillHandler,
     },{
       method: "PUT",
-      path: "/skills/update/{skill_id}",
+      path: "/skills/{skill_id}",
       config: {
         auth: "user_jwt",
         payload: {
@@ -26,21 +26,21 @@ const routes = (handler) => {
       handler: handler.updateSkillHandler,
     },{
       method: "GET",
-      path: "/skills/getById/{skill_id}",
+      path: "/skills/{skill_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.getSkillByIdHandler,
     },{
       method: "DELETE",
-      path: "/skills/delete/{skill_id}",
+      path: "/skills/{skill_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.deleteByIdHandler,
     },{
       method: "GET",
-      path: "/skills/getAllData",
+      path: "/skills",
       config: {
         auth: "user_jwt",
       },

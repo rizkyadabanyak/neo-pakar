@@ -13,6 +13,8 @@ const JobsPayloadSchema = Joi.object({
   salary_max: Joi.number(),
   description: Joi.string()
       .required(),
+  skill: Joi.required(),
+
 });
 
 module.exports = { JobsPayloadSchema };
