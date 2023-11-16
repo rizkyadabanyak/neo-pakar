@@ -99,7 +99,7 @@ class AuthenticationsHandler {
 
       // this.sendSMSMessageTwillo(phone_number);
 
-      const userId = await this._usersService.addUserCompany({ name,username,confPassword , email,address, password,as,role_id });
+      const userId = await this._usersService.addUserCompany({ name,username,confPassword , email,address, password,as,role_id,phone_number});
 
       const response = h.response({
         status: "success",

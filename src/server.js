@@ -54,6 +54,10 @@ const jobs = require("./api/jobs");
 const JobsService = require("./services/postgres/JobsService");
 const JobsValidator = require("./validator/jobs");
 
+// candidateDetail
+const candidateDetail = require("./api/candidateDetail");
+const CandidateDetailService = require("./services/postgres/CandidateDetailService");
+const CandidateDetailValidator = require("./validator/candidateDetail");
 
 // base master validator
 const MasterDataValidator = require("./validator/masterData");
@@ -71,6 +75,7 @@ const init = async () => {
     const timeExperiencesService = new TimeExperiencesService();
     const careerLevelService = new CareerLevelService();
     const jobService = new JobsService();
+    const candidateDetailService = new CandidateDetailService();
 
     const authenticationsService = new AuthenticationsService();
     const server = Hapi.server({
@@ -182,6 +187,12 @@ const init = async () => {
             options: {
                 service: jobService,
                 validator: JobsValidator,
+            },
+        },{
+            plugin: candidateDetail,
+            options: {
+                service: candidateDetailService,
+                validator: CandidateDetailValidator,
             },
         },
         // {

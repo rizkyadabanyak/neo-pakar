@@ -7,6 +7,8 @@ const AuthenticationError = require("../../exceptions/AuthenticationError");
 const slug = require("slug");
 // const users = require("../../models/user");
 const db = require("../../models");
+const CandidateDetailService = require("../../services/postgres/CandidateDetailService");
+const candidateDetailService = new CandidateDetailService;
 const Role = db.Role;
 const User = db.User;
 
@@ -16,7 +18,7 @@ const Op = Sequelize.Op;
 
 class UsersService {
 
-  async addUserCompany({ name,username,confPassword , email,address, password,as,role_id }) {
+  async addUserCompany({ name,username,confPassword , email,address, password,as,role_id ,phone_number}) {
 
     await this.verifyNewUserCompany(username,email);
 
@@ -33,7 +35,7 @@ class UsersService {
 
 
     try {
-      const company = await User.create({
+      const user = await User.create({
         role_id: role_id,
         full_name: name,
         slug: slug_data,
@@ -42,8 +44,8 @@ class UsersService {
         address: address,
         password: hashPassword
       });
-
-      return company.id;
+      candidateDetailService.addTmpCandidateDetail(user.id,phone_number);
+      return user.id;
 
     }catch (e) {
 

@@ -10,6 +10,8 @@ const db = require("../../models");
 const Job = db.Job;
 const CompanyDetail = db.CompanyDetail;
 const User = db.User;
+const Skill = db.Skill;
+
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const CombinationJobSkill = db.combination_job_skills;
@@ -18,18 +20,15 @@ const CombinationJobSkill = db.combination_job_skills;
 class JobsService {
   async addSkillJob(job_id,skill){
 
-    // console.log(skill);
-
-
     try {
 
-      skill.forEach( async (data) => {
+      for (let i=0;i<skill.length;i++){
+        // console.log(i);
         await CombinationJobSkill.create({
           job_id: job_id,
-          skill_id: data,
+          skill_id: skill[i],
         });
-
-      });
+      }
 
     }catch (e) {
 
@@ -40,14 +39,12 @@ class JobsService {
   }
 
   async addJob(company_detail_id,payload) {
-    //
+
     // this.addSkillJob(data.id,payload.skill);
+
     await this.verifyNewJob(payload);
-
-
+    await this.verifySkill(payload.skill);
     const slug_data = slug(payload.name, '-');
-    // console.log(slug_data)
-    // return ;
 
 // return ;
     try {
@@ -155,6 +152,22 @@ class JobsService {
     if (cek) {
       throw new InvariantError("Gagal menambahkan Job. job sudah ada.");
     }
+  }
+  async verifySkill(skill ) {
+
+    for (let i=0;i<skill.length;i++){
+      // console.log(i);
+      let data = await Skill.findOne({
+        where:{
+          id : skill[i]
+        }
+      });
+
+      if (!data) {
+        throw new NotFoundError("Skill tidak ditemukan");
+      }
+    }
+
   }
   async verifyYouJobCompany(id,company_detail_id ) {
 

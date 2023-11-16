@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
     status: {
       type: DataTypes.BOOLEAN
     },
+    img: {
+      type: DataTypes.STRING
+    },
   }, {
     sequelize,
     modelName: 'User',

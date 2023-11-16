@@ -14,7 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   CandidateDetail.init({
-    cv: {
+    user_id: {
+      type: DataTypes.INTEGER
+    }, cv: {
       type: DataTypes.STRING
     },
     address: {
@@ -22,6 +24,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     phone_number: {
       type: DataTypes.INTEGER
+    },
+    description: {
+      type: DataTypes.TEXT
+    },
+    status_completed: {
+      type: DataTypes.BOOLEAN
     },
   }, {
     sequelize,

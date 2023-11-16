@@ -17,7 +17,9 @@ module.exports = {
           },
           key: 'id'
         },
-        allowNull: false
+        allowNull: false,
+        unique: true
+
       },
       cv: {
         type: Sequelize.STRING
@@ -27,6 +29,9 @@ module.exports = {
       },
       phone_number: {
         type: Sequelize.INTEGER
+      },
+      description: {
+        type: Sequelize.TEXT
       },
       status_completed: {
         type: Sequelize.BOOLEAN,
