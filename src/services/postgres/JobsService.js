@@ -5,13 +5,11 @@ const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const AuthenticationError = require("../../exceptions/AuthenticationError");
 const slug = require("slug");
-// const users = require("../../models/user");
 const db = require("../../models");
 const Job = db.Job;
 const CompanyDetail = db.CompanyDetail;
 const User = db.User;
 const Skill = db.Skill;
-
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const CombinationJobSkill = db.combination_job_skills;
@@ -42,6 +40,7 @@ class JobsService {
 
   async addJob(company_detail_id,payload) {
 
+
     // this.addSkillJob(data.id,payload.skill);
 
     await this.verifyNewJob(payload);
@@ -50,7 +49,7 @@ class JobsService {
 
 // return ;
     try {
-      const data = await Job.create({
+      const job = await Job.create({
         company_detail_id: company_detail_id,
         name: payload.name,
         slug: slug_data,
@@ -64,9 +63,23 @@ class JobsService {
         salary_max: payload.salary_max,
         salary_min: payload.salary_min,
       });
-      this.addSkillJob(data.id,payload.skill);
 
-      return data;
+      const skill_tmp = await Skill.findAll({
+        where :{
+          id : payload.skill
+        }
+      })
+
+      if (job && skill_tmp) {
+        // Menambahkan skill ke user
+        // await testCandidate.addSkill(testSkill);
+        await job.setSkill(skill_tmp);
+
+        console.log('Skill added to cn successfully.');
+      } else {
+        console.log('User or skill not found.');
+      }
+      return job;
 
     }catch (e) {
 
@@ -77,8 +90,9 @@ class JobsService {
   }
   async updateJob(id,company_detail_id, payload) {
 
-    await this.verifyNewJob(payload);
+    // await this.verifyNewJob(payload);
     await this.verifyYouJobCompany(id,company_detail_id);
+    await this.verifySkill(payload.skill);
 
     const slug_data = slug(payload.name, '-');
 
@@ -104,8 +118,29 @@ class JobsService {
             }
           }
       );
+      const job = await Job.findOne(
+          {
+            where: {
+            id : id
+            }
+          }
+      );
+      const skill_tmp = await Skill.findAll({
+        where :{
+          id : payload.skill
+        }
+      })
 
-      return data;
+      if (job && skill_tmp) {
+        // Menambahkan skill ke user
+        // await testCandidate.addSkill(testSkill);
+        await job.setSkill(skill_tmp);
+
+        console.log('Skill added to cn successfully.');
+      } else {
+        console.log('User or skill not found.');
+      }
+      return job;
 
     }catch (e) {
 
@@ -261,6 +296,14 @@ class JobsService {
           },{
             association: 'time_experiences',
             attributes : ['name']
+          },{
+            association: 'company_detail',
+            attributes : ['address','about_company'],
+            include :[{
+              association: 'user',
+              attributes : ['full_name','img'],
+
+            }]
           },
         ],
         where: condition,
@@ -291,6 +334,20 @@ class JobsService {
         },{
           association: 'time_experiences',
           attributes : ['name']
+        },{
+          association: 'time_experiences',
+          attributes : ['name']
+        },{
+          association: 'job_skills',
+          attributes : ['name','slug']
+        },{
+          association: 'company_detail',
+          attributes : ['address','about_company'],
+          include :[{
+            association: 'user',
+            attributes : ['full_name','img'],
+
+          }]
         },
       ],
       where: { id: id }
@@ -315,6 +372,20 @@ class JobsService {
         },{
           association: 'time_experiences',
           attributes : ['name']
+        },{
+          association: 'time_experiences',
+          attributes : ['name']
+        },{
+          association: 'Skill',
+          attributes : ['name','slug']
+
+        },{
+          association: 'company_detail',
+          attributes : ['address','about_company'],
+          include :[{
+            association: 'user',
+            attributes : ['full_name','img'],
+          }]
         },
       ],
       where: { slug: slug }

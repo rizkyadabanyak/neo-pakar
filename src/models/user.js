@@ -16,9 +16,9 @@ module.exports = (sequelize, DataTypes) => {
         as: "role",
       });
 
-      this.hasMany(models.CandidateDetail, {
+      this.hasOne(models.CandidateDetail, {
         foreignKey: "user_id",
-        as: "CandidateDetail",
+        as: "candidate_detail",
       });
 
     }

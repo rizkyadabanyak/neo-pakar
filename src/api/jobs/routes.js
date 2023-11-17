@@ -34,7 +34,7 @@ const routes = (handler) => {
       handler: handler.getJobByIdHandler,
     },{
       method: "GET",
-      path: "/jobs/getBySlug/{slug}",
+      path: "/jobs/slug/{slug}",
       config: {
         auth: "user_jwt",
       },

@@ -17,7 +17,7 @@ const paginationHelper = require("../../helpers/paginationHelper");
 
 class SkillsService {
 
-  async addSkill(name,description) {
+  async addSkillCandidate(name,description) {
 
     await this.verifyNewSkill(name);
 

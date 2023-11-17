@@ -16,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "job_type_work",
       });
 
+      this.belongsTo(models.CompanyDetail, {
+        foreignKey: "company_detail_id",
+        as: "company_detail",
+      });
+
       this.belongsTo(models.Qualification, {
         foreignKey: "qualification_id",
         as: "qualification",
@@ -35,8 +40,9 @@ module.exports = (sequelize, DataTypes) => {
         through: "combination_job_skills",
         foreignKey: "job_id",
         otherKey: "skill_id",
-        as: "jobSkills",
+        as: "Skill",
       });
+
     }
   }
   Job.init({

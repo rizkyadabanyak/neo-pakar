@@ -11,4 +11,9 @@ const CandidateDetailPayloadSchema = Joi.object({
   cv_file: Joi.any().required(),
 });
 
-module.exports = { CandidateDetailPayloadSchema };
+const CandidateDetailAddSkillPayloadSchema = Joi.object({
+
+  skill: Joi.any().required(),
+});
+
+module.exports = { CandidateDetailPayloadSchema,CandidateDetailAddSkillPayloadSchema };

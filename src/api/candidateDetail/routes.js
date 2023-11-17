@@ -2,6 +2,19 @@ const routes = (handler) => {
   return [
     {
       method: "POST",
+      path: "/candidateDetail/addSkill",
+      config: {
+        auth: "user_jwt",
+        payload: {
+          parse: true,
+          allow: 'multipart/form-data',
+          multipart: {output: 'stream'},
+        }
+      },
+      handler: handler.addSkillHandler,
+    },
+    {
+      method: "POST",
       path: "/candidateDetail",
       config: {
         auth: "user_jwt",

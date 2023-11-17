@@ -8,11 +8,66 @@ const slug= require('slug');
 const db = require("../../models");
 const fs = require("fs");
 const Job = db.Job;
+const Skill = db.Skill;
 const User = db.User;
+const combination_candidate_skills = db.combination_candidate_skills;
 const CandidateDetail = db.CandidateDetail;
 const uploadFileHelper = require("../../helpers/uploadFileHelper");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 class CandidateDetailService {
+  async verifySkill(skill ) {
+
+    for (let i=0;i<skill.length;i++){
+      // console.log(i);
+      let data = await Skill.findOne({
+        where:{
+          id : skill[i]
+        }
+      });
+
+      if (!data) {
+        throw new NotFoundError("Skill tidak ditemukan");
+      }
+    }
+
+  }
+  async addSkillCandidate(skill,candidate_id) {
+
+    await this.verifySkill(skill);
+    try {
+
+      const candidate_tmp = await CandidateDetail.findOne({
+        where :{
+          id : candidate_id
+        }
+      })
+
+      const skill_tmp = await Skill.findAll({
+        where :{
+          id : skill
+        }
+      })
+
+
+      if (candidate_tmp && skill_tmp) {
+        // Menambahkan skill ke user
+        // await testCandidate.addSkill(testSkill);
+        await candidate_tmp.setSkill(skill_tmp);
+
+        console.log('Skill added to cn successfully.');
+      } else {
+        console.log('User or skill not found.');
+      }
+
+    }catch (e) {
+
+      console.log(e)
+      throw new InvariantError("candidate detail gagal ditambahkan");
+
+    }
+  }
 
   async getCandidateDetail(user_id) {
     const data = await User.findOne({
@@ -26,6 +81,29 @@ class CandidateDetailService {
         id:user_id
       }
     });
+
+    return data;
+  }
+
+  async cekCandidateDetail(user_id) {
+    const data = await User.findOne({
+      attributes : ['username','email','full_name','img',],
+      include: [
+        {
+          association: 'candidate_detail',
+          where : {
+            status_completed: true,
+          }
+        },
+      ],
+      where:{
+        id: user_id,
+      }
+    });
+    if (!data){
+      throw new InvariantError("Belum melengkapi cadidate detail");
+
+    }
 
     return data;
   }
