@@ -82,6 +82,25 @@ class PermissionsService {
       throw new InvariantError("permission gagal ditambahkan");
 
     }
+  }  async getPermissionOnRoleById(role_id) {
+
+
+    try {
+      const data = await Role.findOne({
+        include: { association: 'permission' },
+        where:{
+          id:role_id
+        }
+      });
+
+      return data;
+
+    }catch (e) {
+
+      console.log(e)
+      throw new InvariantError("permission gagal ditambahkan");
+
+    }
   }
 
 

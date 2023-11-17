@@ -128,13 +128,32 @@ class jobsHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
       const user_id = decodeJwt.id;
+      const as_role = decodeJwt.as;
 
-      const company_detail = await companiesService.cekCompanyDetail(user_id);
+      let data;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_show_job"])
+      if (as_role == "company"){
 
 
-      const data = await this._service.getJobAll(company_detail,page,size,search);
+        const company_detail = await companiesService.cekCompanyDetail(user_id);
+
+        await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_show_job"])
+
+        data = await this._service.getJobAll(company_detail,page,size,search);
+
+      }else if (as_role == "admin") {
+
+        await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_show_job"])
+
+        data = await this._service.getJobAll(as_role,page,size,search);
+
+      }else {
+
+        data = await this._service.getJobAll(as_role,page,size,search);
+
+      }
+
+
 
       return {
         status: "success",

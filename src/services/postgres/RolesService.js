@@ -11,6 +11,7 @@ const Role = db.Role;
 const User = db.User;
 
 const Sequelize = require('sequelize');
+const paginationHelper = require("../../helpers/paginationHelper");
 const Op = Sequelize.Op;
 
 
@@ -99,34 +100,52 @@ class RolesService {
     }
   }
 
-  async getRoleAll(auth) {
+  async getRoleAll(auth,page_tmp,size_tmp,search_tmp) {
+    let models = null;
 
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
+
+    const condition = search
+        ? {
+          [Op.or]: {
+            name: { [Op.iLike]: `%${search}%` },
+          },
+        }
+        : null;
 
     try {
-      let data = null;
       if (auth) {
-        data = await Role.findAll({
-          where : {
-            status : true
-          }
+
+        models = await Role.findAndCountAll({
+          where: condition,
+          limit,
+          offset,
         });
+
       }else {
-        data = await Role.findAll({
-          where : {
-            status : true,
+
+        models = await Role.findAndCountAll({
+          where: {
+            [Op.or]: {
+              name: { [Op.iLike]: `%${search}%` },
+            },
             name: {
               [Op.and]: [
                 { [Op.ne]:'admin'}, // Greater than 25
                 { [Op.ne]:'company_employee'}, // Less than 40
               ],
             },
-          }
+          },
+          limit,
+          offset,
         });
+
       }
-
-
-
-      return data;
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
 
     }catch (e) {
       throw new NotFoundError("terjadi kesalahan");

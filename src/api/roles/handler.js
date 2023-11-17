@@ -108,6 +108,7 @@ class rolesHandler {
   async getAllRoleHandler(request, h) {
 
     try {
+      const { page,size,search } = request.query;
 
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
@@ -115,7 +116,7 @@ class rolesHandler {
 
       await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_role","can_show_role"])
 
-      const data = await this._service.getRoleAll(true);
+      const data = await this._service.getRoleAll(true,page,size,search);
 
       return {
         status: "success",
@@ -145,9 +146,10 @@ class rolesHandler {
   async getAllRoleNoAuthHandler(request, h) {
 
     try {
+      const { page,size,search } = request.query;
 
 
-      const data = await this._service.getRoleAll(false);
+      const data = await this._service.getRoleAll(false,page,size,search);
 
       return {
         status: "success",

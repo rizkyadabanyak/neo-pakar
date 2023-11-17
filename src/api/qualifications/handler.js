@@ -107,6 +107,7 @@ class qualificationHandler {
   async getAllQualificationHandler(request, h) {
 
     try {
+      const { page,size,search } = request.query;
 
 
       const header = request.headers.authorization;
@@ -117,7 +118,7 @@ class qualificationHandler {
 
 
 
-      const data = await this._service.getQualificationAll();
+      const data = await this._service.getQualificationAll(page,size,search);
 
       return {
         status: "success",

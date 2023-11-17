@@ -11,6 +11,7 @@ const JobTypeWork = db.JobTypeWork;
 const User = db.User;
 
 const Sequelize = require('sequelize');
+const paginationHelper = require("../../helpers/paginationHelper");
 const Op = Sequelize.Op;
 
 
@@ -105,19 +106,32 @@ class JobTypeWorksServiceService {
     }
   }
 
-  async getJobTypeWorkAll() {
+  async getJobTypeWorkAll(page_tmp,size_tmp,search_tmp) {
+
+
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
+
+    const condition = search
+        ? {
+          [Op.or]: {
+            name: { [Op.iLike]: `%${search}%` },
+          },
+        }
+        : null;
 
 
     try {
-
-      const data = await JobTypeWork.findAll({
-        where : {
-          status : true
-        }
+      const models = await JobTypeWork.findAndCountAll({
+        where: condition,
+        limit,
+        offset,
       });
 
-
-      return data;
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
 
     }catch (e) {
       console.log(e)

@@ -14,6 +14,13 @@ const routes = (handler) => {
       handler: handler.setRolePermissionHandler,
     },{
       method: "GET",
+      path: "/permissions/{role_id}",
+      config: {
+        auth: "user_jwt",
+      },
+      handler: handler.getPermissionOnRoleByIdHandler,
+    },{
+      method: "GET",
       path: "/permissions",
       config: {
         auth: "user_jwt",

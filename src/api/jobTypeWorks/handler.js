@@ -107,6 +107,7 @@ class jobTypeWorksHandler {
   async getAllJobTypeWorkHandler(request, h) {
 
     try {
+      const { page,size,search } = request.query;
 
 
       const header = request.headers.authorization;
@@ -117,7 +118,7 @@ class jobTypeWorksHandler {
 
 
 
-      const data = await this._service.getJobTypeWorkAll();
+      const data = await this._service.getJobTypeWorkAll(page,size,search );
 
       return {
         status: "success",

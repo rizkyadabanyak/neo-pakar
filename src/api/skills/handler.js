@@ -107,6 +107,7 @@ class rolesHandler {
   async getAllSkillHandler(request, h) {
 
     try {
+      const { page,size,search } = request.query;
 
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
@@ -116,7 +117,7 @@ class rolesHandler {
 
 
 
-      const data = await this._service.getSkillAll();
+      const data = await this._service.getSkillAll(page,size,search);
 
       return {
         status: "success",

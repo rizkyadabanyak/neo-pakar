@@ -171,6 +171,7 @@ class JobsService {
     }
 
   }
+
   async verifyYouJobCompany(id,company_detail_id ) {
 
 
@@ -187,25 +188,63 @@ class JobsService {
   }
 
 
+  async getJobAll(as,page_tmp,size_tmp,search_tmp) {
+    let role;
 
 
-  async getJobAll(company_detail,page_tmp,size_tmp,search_tmp) {
+    if (typeof as == "object"){
+      role = "company"
+    }else {
+      role = as
+    }
+
 
     const page = page_tmp || 0;
     const size = size_tmp || 10;
     const search = search_tmp || '';
     const { limit, offset } = await paginationHelper.getPagination(page, size);
+
     try {
+      let models,condition;
+      if (role == "company"){
 
-      const condition = search
-          ? {
-            [Op.or]: {
-              name: { [Op.iLike]: `%${search}%` },
-            },
-          }
-          : null;
+        let company_detail = as;
 
-      const models  = await Job.findAndCountAll({
+        condition = search
+            ? {
+              [Op.and]: {
+                name: { [Op.iLike]: `%${search}%` },
+                company_detail_id : company_detail.id
+              },
+            }
+            : {
+              company_detail_id : company_detail.id
+            };
+
+      }else if (role == "admin"){
+
+        condition = search
+            ? {
+              [Op.and]: {
+                name: { [Op.iLike]: `%${search}%` },
+              },
+            }
+            : null;
+      }else {
+
+        condition = search
+            ? {
+              [Op.and]: {
+                name: { [Op.iLike]: `%${search}%` },
+                status : true
+              },
+            }
+            : {
+              status : true
+            };
+      }
+
+      models = await Job.findAndCountAll({
         include:[
           {
             association: 'job_type_work',
@@ -228,6 +267,7 @@ class JobsService {
         limit,
         offset,
       });
+
       const response = paginationHelper.getPagingData(models, page, limit);
       return response;
     }catch (e) {
