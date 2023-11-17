@@ -1,7 +1,7 @@
 'use strict';
 // mengimpor dotenv dan menjalankan konfigurasinya
 require("dotenv").config();
-
+const Path = require('path');
 const Hapi = require("@hapi/hapi");
 const Jwt = require("@hapi/jwt");
 const config = require('../src/database/config');
@@ -85,9 +85,11 @@ const init = async () => {
             cors: {
                 origin: ["*"],
             },
-        },
-    });
 
+        },
+
+    });
+    await server.register(require('@hapi/inert'));
     // registrasi plugin eksternal
     await server.register([
         {

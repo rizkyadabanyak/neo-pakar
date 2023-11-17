@@ -15,7 +15,17 @@ const uploadFileHelper = require("../../helpers/uploadFileHelper");
 class CandidateDetailService {
 
   async getCandidateDetail(user_id) {
-    const data = await Job.findAll();
+    const data = await User.findOne({
+      attributes : ['username','email','full_name','img',],
+      include: [
+        {
+          association: 'CandidateDetail',
+        },
+      ],
+      where:{
+        id:user_id
+      }
+    });
 
     return data;
   }

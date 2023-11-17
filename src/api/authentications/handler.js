@@ -21,6 +21,7 @@ class AuthenticationsHandler {
     this.loginAuthenticationHandler = this.loginAuthenticationHandler.bind(this);
     this.putAuthenticationHandler = this.putAuthenticationHandler.bind(this);
     this.deleteAuthenticationHandler = this.deleteAuthenticationHandler.bind(this);
+    this.fileHandler = this.fileHandler.bind(this);
   }
 
 //   async sendSMSMessage(sns, params) {
@@ -90,6 +91,38 @@ class AuthenticationsHandler {
 //     }
 //
 //   }
+  async fileHandler(request, h) {
+    try {
+      // const { role_id } = request.params;
+      // return h.response(
+      //     request.params.file_path
+      // )
+      return  h.file("./"+request.params.file_path);
+
+      response.code(201);
+      return response;
+
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
+
   async registerUserCompanyHandler(request, h) {
     try {
 

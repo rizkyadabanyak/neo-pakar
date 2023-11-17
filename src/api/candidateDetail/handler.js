@@ -28,8 +28,6 @@ class rolesHandler {
       const decode_user_id= decodeJwt.id;
       await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_show_detail_profile"])
 
-
-
       const data = await this._service.getCandidateDetail(decode_user_id)
 
       return {

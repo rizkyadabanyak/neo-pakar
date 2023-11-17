@@ -11,7 +11,8 @@ const uploadFileHelper = {
         const array_filename = filename.split(".");
         const name = path_tmp+'/'+username +'_'+ random +'.'+ array_filename[1];
 
-        const path = "./uploads/" + name;
+        const path = "./public/uploads/" + name;
+        const path_save_db = "public/uploads/" + name;
         const file = fs.createWriteStream(path);
 
         file.on('error', (err) => console.error(err));
@@ -24,7 +25,7 @@ const uploadFileHelper = {
                 headers: file_tmp.hapi.headers
             }
         })
-        return path;
+        return path_save_db;
     }
 };
 

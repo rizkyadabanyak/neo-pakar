@@ -1,3 +1,4 @@
+const Path = require('path');
 const routes = (handler) => [
   {
     method: "POST",
@@ -50,6 +51,11 @@ const routes = (handler) => [
       }
     },
     handler: handler.deleteAuthenticationHandler,
+  },
+  {
+    method: "GET",
+    path: '/images/{file_path*}',  // The route parameter * allows for nested paths
+    handler: handler.fileHandler,
   },
 ];
 
