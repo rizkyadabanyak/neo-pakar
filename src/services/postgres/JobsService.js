@@ -15,6 +15,8 @@ const Skill = db.Skill;
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const CombinationJobSkill = db.combination_job_skills;
+const paginationHelper = require("../../helpers/paginationHelper");
+
 
 
 class JobsService {
@@ -184,10 +186,27 @@ class JobsService {
     }
   }
 
-  async getJobAll(company_detail) {
+
+
+
+  async getJobAll(company_detail,page_tmp,size_tmp,search_tmp) {
+
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
     try {
-      const data = await Job.findAll({
-        include: [
+
+      const condition = search
+          ? {
+            [Op.or]: {
+              name: { [Op.iLike]: `%${search}%` },
+            },
+          }
+          : null;
+
+      const models  = await Job.findAndCountAll({
+        include:[
           {
             association: 'job_type_work',
             attributes : ['name'],
@@ -200,14 +219,19 @@ class JobsService {
           },{
             association: 'time_experiences',
             attributes : ['name']
+          },{
+            association: 'time_experiences',
+            attributes : ['name']
           },
         ],
-        where : {
-          company_detail_id : company_detail.id
-        }
+        where: condition,
+        limit,
+        offset,
       });
-      return data;
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
     }catch (e) {
+      console.log(e)
       throw new NotFoundError("terjadi kesalahan");
     }
   }

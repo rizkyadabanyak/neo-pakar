@@ -12,6 +12,7 @@ const User = db.User;
 
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
+const paginationHelper = require("../../helpers/paginationHelper");
 
 
 class TimeExperiencesService {
@@ -105,19 +106,32 @@ class TimeExperiencesService {
     }
   }
 
-  async getTimeExperienceAll() {
+  async getTimeExperienceAll(page_tmp,size_tmp,search_tmp) {
+
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
+
+    const condition = search
+        ? {
+          [Op.or]: {
+            name: { [Op.iLike]: `%${search}%` },
+          },
+        }
+        : null;
 
 
     try {
 
-      const data = await TimeExperience.findAll({
-        where : {
-          status : true
-        }
+      const models = await TimeExperience.findAndCountAll({
+        where: condition,
+        limit,
+        offset,
       });
 
-
-      return data;
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
 
     }catch (e) {
       console.log(e)

@@ -108,6 +108,7 @@ class timeExperienceHandler {
 
     try {
 
+      const { page,size,search } = request.query;
 
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
@@ -115,9 +116,7 @@ class timeExperienceHandler {
 
       await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_time_experience","can_show_time_experience"])
 
-
-
-      const data = await this._service.getTimeExperienceAll();
+      const data = await this._service.getTimeExperienceAll(page,size,search);
 
       return {
         status: "success",

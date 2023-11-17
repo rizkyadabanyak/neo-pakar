@@ -2,7 +2,7 @@ const routes = (handler) => {
   return [
     {
       method: "POST",
-      path: "/timeExperiences/store",
+      path: "/timeExperiences",
       config: {
         auth: "user_jwt",
         payload: {
@@ -14,7 +14,7 @@ const routes = (handler) => {
       handler: handler.storeTimeExperienceHandler,
     },{
       method: "PUT",
-      path: "/timeExperiences/update/{time_experience_id}",
+      path: "/timeExperiences/{time_experience_id}",
       config: {
         auth: "user_jwt",
         payload: {
@@ -26,21 +26,21 @@ const routes = (handler) => {
       handler: handler.updateTimeExperienceHandler,
     },{
       method: "GET",
-      path: "/timeExperiences/getById/{time_experience_id}",
+      path: "/timeExperiences/{time_experience_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.getTimeExperienceByIdHandler,
     },{
       method: "DELETE",
-      path: "/timeExperiences/delete/{time_experience_id}",
+      path: "/timeExperiences/{time_experience_id}",
       config: {
         auth: "user_jwt",
       },
       handler: handler.deleteByIdHandler,
     },{
       method: "GET",
-      path: "/timeExperiences/getAllData",
+      path: "/timeExperiences",
       config: {
         auth: "user_jwt",
       },

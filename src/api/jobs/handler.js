@@ -120,6 +120,10 @@ class jobsHandler {
   async getAllJobHandler(request, h) {
 
     try {
+      const { page,size,search } = request.query;
+
+
+
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
@@ -130,7 +134,7 @@ class jobsHandler {
       await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_show_job"])
 
 
-      const data = await this._service.getJobAll(company_detail);
+      const data = await this._service.getJobAll(company_detail,page,size,search);
 
       return {
         status: "success",

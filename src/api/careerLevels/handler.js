@@ -107,6 +107,7 @@ class careerLevelHandler {
   async getAllCareerLevelHandler(request, h) {
 
     try {
+      const { page,size,search } = request.query;
 
 
       const header = request.headers.authorization;
@@ -117,7 +118,7 @@ class careerLevelHandler {
 
 
 
-      const data = await this._service.getCareerLevelAll();
+      const data = await this._service.getCareerLevelAll(page,size,search);
 
       return {
         status: "success",
