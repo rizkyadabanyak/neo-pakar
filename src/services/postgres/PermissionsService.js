@@ -63,8 +63,6 @@ class PermissionsService {
     }
 
 
-    console.log(create_datas);
-    return ;
 
     try {
       const data = await Permission.bulkCreate(create_datas);
