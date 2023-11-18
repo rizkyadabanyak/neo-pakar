@@ -70,19 +70,25 @@ class CandidateDetailService {
   }
 
   async getCandidateDetail(user_id) {
-    const data = await User.findOne({
-      attributes : ['username','email','full_name','img',],
-      include: [
-        {
-          association: 'CandidateDetail',
-        },
-      ],
-      where:{
-        id:user_id
-      }
-    });
+    try {
+      const data = await User.findOne({
+        attributes : ['username','email','full_name','img',],
+        include: [
+          {
+            association: 'candidate_detail',
+          },
+        ],
+        where:{
+          id:user_id
+        }
+      });
+      return data;
 
-    return data;
+    }catch (e) {
+      console.log(e)
+      throw new InvariantError("candidate detail gagal diload");
+    }
+
   }
 
   async cekCandidateDetail(user_id) {
@@ -109,16 +115,18 @@ class CandidateDetailService {
   }
 
   async addTmpCandidateDetail(user_id,phone_number) {
-    // console.log("xxxx"+phone_number)
+    // console.log("xxxx"+phone_number+"XXX"+user_id)
     try {
       await CandidateDetail.create({
         user_id: user_id,
         phone_number:phone_number
       });
+      console.log("success"+phone_number)
+
     }catch (e) {
 
       console.log(e)
-      throw new InvariantError("candidate detail gagal ditambahkan");
+      // throw new InvariantError("candidate detail gagal ditambahkan");
 
     }
   }

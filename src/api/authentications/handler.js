@@ -17,7 +17,7 @@ class AuthenticationsHandler {
     this._tokenManager = tokenManager;
     this._validator = validator;
 
-    this.registerUserCompanyHandler = this.registerUserCompanyHandler.bind(this);
+    this.registerUserHandler = this.registerUserHandler.bind(this);
     this.loginAuthenticationHandler = this.loginAuthenticationHandler.bind(this);
     this.putAuthenticationHandler = this.putAuthenticationHandler.bind(this);
     this.deleteAuthenticationHandler = this.deleteAuthenticationHandler.bind(this);
@@ -123,7 +123,7 @@ class AuthenticationsHandler {
     }
   }
 
-  async registerUserCompanyHandler(request, h) {
+  async registerUserHandler(request, h) {
     try {
 
       this._validator.validateUserPayload(request.payload);
@@ -132,7 +132,7 @@ class AuthenticationsHandler {
 
       // this.sendSMSMessageTwillo(phone_number);
 
-      const userId = await this._usersService.addUserCompany({ name,username,confPassword , email,address, password,as,role_id,phone_number});
+      const userId = await this._usersService.addUser({ name,username,confPassword , email,address, password,as,role_id,phone_number});
 
       const response = h.response({
         status: "success",

@@ -24,7 +24,7 @@ const routes = (handler) => [
         multipart: { output: 'stream' },
       }
     },
-    handler: handler.registerUserCompanyHandler,
+    handler: handler.registerUserHandler,
   },
   {
     method: "PUT",

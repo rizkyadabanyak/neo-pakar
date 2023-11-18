@@ -26,7 +26,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       phone_number: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
       status_completed: {
         type: Sequelize.BOOLEAN,

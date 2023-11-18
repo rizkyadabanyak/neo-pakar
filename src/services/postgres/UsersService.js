@@ -18,21 +18,16 @@ const Op = Sequelize.Op;
 
 class UsersService {
 
-  async addUserCompany({ name,username,confPassword , email,address, password,as,role_id ,phone_number}) {
+  async addUser({ name,username,confPassword , email,address, password,as,role_id ,phone_number}) {
 
     await this.verifyNewUserCompany(username,email);
 
-
-    // return console.log(email)
-    // return ;
 
     const id = `user-${nanoid(16)}`;
 
     const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(password, salt);
     const slug_data = slug(name, '-');
-
-
 
     try {
       const user = await User.create({
@@ -44,6 +39,8 @@ class UsersService {
         address: address,
         password: hashPassword
       });
+
+
       candidateDetailService.addTmpCandidateDetail(user.id,phone_number);
       return user.id;
 

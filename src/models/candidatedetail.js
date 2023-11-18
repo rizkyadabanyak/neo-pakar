@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT
     },
     phone_number: {
-      type: DataTypes.INTEGER
+      type: DataTypes.BIGINT
     },
     description: {
       type: DataTypes.TEXT

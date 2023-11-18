@@ -28,7 +28,7 @@ module.exports = {
         type: Sequelize.TEXT
       },
       phone_number: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT
       },
       description: {
         type: Sequelize.TEXT
