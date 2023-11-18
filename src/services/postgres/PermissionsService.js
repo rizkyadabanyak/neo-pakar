@@ -38,23 +38,33 @@ class PermissionsService {
 
 
   async addPermission(role_id, access) {
-
     let create_datas = [];
 
-    for (const data of access){
+    if (typeof access != "string"){
 
-      const data_cek = await this.cekDbPermissionOnRole(role_id,data)
+      for (const data of access){
 
-      if (data_cek){
-        await this.deletePermissionOnRole(role_id)
+        const data_cek = await this.cekDbPermissionOnRole(role_id,data)
+
+        if (data_cek){
+          await this.deletePermissionOnRole(role_id)
+        }
+
+        create_datas.push({
+          role_id:role_id,
+          access:data
+        })
       }
-
+    }else {
       create_datas.push({
         role_id:role_id,
-        access:data
+        access:access
       })
     }
 
+
+    console.log(create_datas);
+    return ;
 
     try {
       const data = await Permission.bulkCreate(create_datas);

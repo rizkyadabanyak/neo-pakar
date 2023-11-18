@@ -31,7 +31,9 @@ class permissionsHandler {
 
       // this._validator.validatePermissionPayload(request.payload);
       const {access } = request.payload;
-
+      // return h.response({
+      //   status: access,
+      // });
       const userId = await this._service.addPermission(role_id, access);
 
       const response = h.response({
