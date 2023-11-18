@@ -9,6 +9,8 @@ const slug = require("slug");
 const db = require("../../models");
 const CandidateDetailService = require("../../services/postgres/CandidateDetailService");
 const candidateDetailService = new CandidateDetailService;
+const CompanyDetailService = require("../../services/postgres/CompanyDetailService");
+const companyDetailService = new CompanyDetailService;
 const Role = db.Role;
 const User = db.User;
 
@@ -40,8 +42,13 @@ class UsersService {
         password: hashPassword
       });
 
+      if (role_id == 3){
+        candidateDetailService.addTmpCandidateDetail(user.id,phone_number);
 
-      candidateDetailService.addTmpCandidateDetail(user.id,phone_number);
+      }else {
+        companyDetailService.addTmpCompanyDetail(user.id,phone_number);
+
+      }
       return user.id;
 
     }catch (e) {

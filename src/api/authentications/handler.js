@@ -169,8 +169,6 @@ class AuthenticationsHandler {
 
   async loginAuthenticationHandler(request, h) {
     try {
-
-
       // console.log('sini');
 
       this._validator.validatePostAuthenticationPayload(request.payload);
