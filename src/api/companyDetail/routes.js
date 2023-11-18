@@ -19,7 +19,7 @@ const routes = (handler) => {
       config: {
         auth: "user_jwt",
       },
-      handler: handler.getCandidateDetailHandler,
+      handler: handler.getCompanyDetailHandler,
     },
   ];
 };

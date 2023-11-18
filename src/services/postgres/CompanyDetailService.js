@@ -70,13 +70,13 @@ class CandidateDetailService {
     }
   }
 
-  async getCandidateDetail(user_id) {
+  async getCompanyDetail(user_id) {
     try {
       const data = await User.findOne({
         attributes : ['username','email','full_name','img',],
         include: [
           {
-            association: 'candidate_detail',
+            association: 'company_detail',
           },
         ],
         where:{
@@ -87,7 +87,7 @@ class CandidateDetailService {
 
     }catch (e) {
       console.log(e)
-      throw new InvariantError("candidate detail gagal diload");
+      throw new InvariantError("company detail gagal diload");
     }
 
   }

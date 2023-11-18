@@ -18,7 +18,8 @@ class CompaniesService {
     try {
       const data = await CompanyDetail.findOne({
         where : {
-          user_id : user_id
+          user_id : user_id,
+          status_completed: true,
         }
       })
 

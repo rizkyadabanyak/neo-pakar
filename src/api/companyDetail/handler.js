@@ -12,19 +12,18 @@ class rolesHandler {
     this._service = service;
     this._validator = validator;
 
-    this.getCandidateDetailHandler = this.getCandidateDetailHandler.bind(this);
+    this.getCompanyDetailHandler = this.getCompanyDetailHandler.bind(this);
     this.updatecompanyDetailHandler = this.updatecompanyDetailHandler.bind(this);
   }
-  async getCandidateDetailHandler(request, h) {
+  async getCompanyDetailHandler(request, h) {
     try {
-
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
       const decode_user_id= decodeJwt.id;
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_show_detail_profile"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_show_detail_profile_company"])
 
-      const data = await this._service.getCandidateDetail(decode_user_id)
+      const data = await this._service.getCompanyDetail(decode_user_id)
 
       return {
         status: "success",

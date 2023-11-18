@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
         as: "candidate_detail",
       });
+      this.hasOne(models.CompanyDetail, {
+        foreignKey: "user_id",
+        as: "company_detail",
+      });
 
     }
   }
