@@ -56,8 +56,6 @@ class PermissionsService {
         })
       }
     }else {
-
-
       const data_cek = await this.cekDbPermissionOnRole(role_id,access)
 
       if (data_cek){
