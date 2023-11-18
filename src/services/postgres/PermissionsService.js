@@ -56,6 +56,14 @@ class PermissionsService {
         })
       }
     }else {
+
+
+      const data_cek = await this.cekDbPermissionOnRole(role_id,access)
+
+      if (data_cek){
+        await this.deletePermissionOnRole(role_id)
+      }
+
       create_datas.push({
         role_id:role_id,
         access:access
