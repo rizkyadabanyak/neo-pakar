@@ -41,11 +41,30 @@ class SkillsService {
 
     }
   }
+  async itsMyUniq(id, slug) {
+    const cek_data = await Skill.findOne({
+      where: {
+        slug: slug,
+        id : id
+      }
+    });
+
+    if (cek_data) {
+      return false
+    }
+    return true;
+  }
   async updateSkill(id, name, description) {
-
-
-    await this.verifyNewSkill(name );
     const slug_data = slug(name, '_');
+
+    const cekMyUniq = await this.itsMyUniq(id,slug_data);
+
+    if (cekMyUniq == true){
+
+    }else {
+
+    }
+    await this.verifyNewSkill(name);
 
     try {
       const data = await Skill.update(

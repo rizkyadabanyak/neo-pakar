@@ -50,7 +50,7 @@ class CandidateDetailService {
         }
       })
 
-
+      console.log(skill_tmp);
       if (candidate_tmp && skill_tmp) {
         // Menambahkan skill ke user
         // await testCandidate.addSkill(testSkill);
@@ -76,6 +76,12 @@ class CandidateDetailService {
         include: [
           {
             association: 'candidate_detail',
+            include:[
+              {
+                association: 'Skill',
+                attributes:['name','slug']
+              }
+            ]
           },
         ],
         where:{

@@ -36,7 +36,15 @@ module.exports = (sequelize, DataTypes) => {
       unique: true
     },
     description: {
-      type: DataTypes.STRING
+      type: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return `${this.name} ${this.description}`;
+        },
+        set(value) {
+          throw new Error('Do not try to set the `fullName` value!');
+        }
+      }
     },
     status: {
       type: DataTypes.BOOLEAN,

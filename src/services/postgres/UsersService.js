@@ -42,12 +42,13 @@ class UsersService {
         password: hashPassword
       });
 
-      if (role_id == 3){
-        candidateDetailService.addTmpCandidateDetail(user.id,phone_number);
-
-      }else {
+      if (role_id == 2){
         companyDetailService.addTmpCompanyDetail(user.id,phone_number);
+        console.log('company');
+      }else {
 
+        candidateDetailService.addTmpCandidateDetail(user.id,phone_number);
+        console.log('candidate');
       }
       return user.id;
 
