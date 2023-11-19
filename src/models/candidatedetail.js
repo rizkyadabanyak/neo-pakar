@@ -16,13 +16,24 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: "skill_id",
         as: "Skill",
       });
+
+      this.belongsToMany(models.Job, {
+        through: "combination_candidate_jobs",
+        foreignKey: "job_id",
+        otherKey: "candidate_id",
+        as: "Job",
+      });
     }
   }
   CandidateDetail.init({
     user_id: {
       type: DataTypes.INTEGER
     }, cv: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      get() {
+        const rawValue = this.getDataValue('cv');
+        return process.env.BASE_URL_BACKEND +"/images/" + rawValue;
+      }
     },
     address: {
       type: DataTypes.TEXT

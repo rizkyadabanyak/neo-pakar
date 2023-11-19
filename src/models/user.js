@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 'use strict';
 const {
   Model
@@ -48,7 +50,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN
     },
     img: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      get() {
+        const rawValue = this.getDataValue('img');
+        return process.env.BASE_URL_BACKEND +"/images/" + rawValue;
+      }
     },
   }, {
     sequelize,

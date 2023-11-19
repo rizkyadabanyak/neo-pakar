@@ -43,6 +43,13 @@ module.exports = (sequelize, DataTypes) => {
         as: "Skill",
       });
 
+      this.belongsToMany(models.CandidateDetail, {
+        through: "combination_candidate_jobs",
+        foreignKey: "job_id",
+        otherKey: "candidate_id",
+        as: "CandidateDetail",
+      });
+
     }
   }
   Job.init({
