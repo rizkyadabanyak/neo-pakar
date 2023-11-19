@@ -23,7 +23,7 @@ class rolesHandler {
       const decode_user_id= decodeJwt.id;
       const decode_username_as= decodeJwt.username_as
       const { slug_job } = request.params;
-      const { description } = request.payload;
+      const { description,type_request } = request.payload;
 
       const candidate_detail = await this._service.cekCandidateDetail(decode_user_id)
       const detail_candidate_id = candidate_detail.candidate_detail.id;
@@ -33,10 +33,10 @@ class rolesHandler {
       //   message: candidate_detail,
       // });
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_apply_job_candidate"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_all_company_behavior","can_apply_job_candidate","can_given_offer_company_behavior"])
 
       // this._validator.validateCandidateDetailAddSkillPayload(request.payload);
-      const data = await this._service.applyJobs(slug_job,detail_candidate_id,description)
+      const data = await this._service.applyJobs(slug_job,detail_candidate_id,description,type_request)
 
       // const { name, description } = request.payload;
 
@@ -78,17 +78,17 @@ class rolesHandler {
 
       const candidate_detail = await this._service.cekCandidateDetail(decode_user_id)
       const detail_candidate_id = candidate_detail.candidate_detail.id;
-      const { page,size,search,status } = request.query;
+      const { page,size,search,status,type_request } = request.query;
 
       // return h.response({
       //   status: "success",
       //   message: candidate_detail,
       // });
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_show_apply_job_candidate"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_all_company_behavior","can_show_apply_job_candidate","can_show_apply_job_company_behavior"])
 
       // this._validator.validateCandidateDetailAddSkillPayload(request.payload);
-      const data = await this._service.showApplyJobs(detail_candidate_id,page,size,search,status)
+      const data = await this._service.showApplyJobs(detail_candidate_id,page,size,search,status,type_request)
 
       // const { name, description } = request.payload;
 

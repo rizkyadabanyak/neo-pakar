@@ -57,13 +57,14 @@ class CandidateDetailService {
     return data.id;
   }
 
-  async verifApplyJobs(job_id,detail_candidate_id) {
+  async verifApplyJobs(job_id,detail_candidate_id,type_request) {
 
     const data = await combination_candidate_jobs.findOne({
       where:{
         job_id : job_id,
         candidate_id : detail_candidate_id,
         status: "processed",
+        type_request: type_request,
       }
     });
 
@@ -73,28 +74,51 @@ class CandidateDetailService {
     return data;
   }
 
-  async showApplyJobs(detail_candidate_id,page_tmp,size_tmp,search_tmp,status_tmp) {
+  async showApplyJobs(detail_candidate_id,page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp) {
 
 
     const page = page_tmp || 0;
     const size = size_tmp || 10;
     const search = search_tmp || '';
     const status = status_tmp || '';
+    const type_request = type_request_tmp || '';
     const { limit, offset } = await paginationHelper.getPagination(page, size);
 
     // console.log(status);
     // return ;
-    const condition = (status)
-        ? {
-          [Op.and]: {
-            type_request : "candidate_propose",
-            status : status,
-          },
-        }
-        : {
-          type_request : "candidate_propose"
-        };
+    // const condition = (status && type_request)
+    //     ? {
+    //       [Op.and]: {
+    //         type_request : type_request,
+    //         status : status,
+    //       },
+    //     }
+    //     : null;
 
+    let condition = null;
+
+    if (status){
+      condition = {
+        [Op.and]: {
+          status : status,
+        },
+      };
+    }else if (type_request){
+      condition = {
+        [Op.and]: {
+          type_request : type_request,
+        },
+      };
+    }else if (status && type_request){
+      condition = {
+        [Op.and]: {
+          status : status,
+          type_request : type_request,
+        },
+      };
+    }else {
+      condition = null
+    }
 
     try {
 
@@ -136,11 +160,11 @@ class CandidateDetailService {
     }
   }
 
-  async applyJobs(slug_tmp,detail_candidate_id,description) {
+  async applyJobs(slug_tmp,detail_candidate_id,description,type_request) {
 
     const job_id =  await this.convertSlugToIdJob(slug_tmp);
 
-    await this.verifApplyJobs(job_id,detail_candidate_id)
+    await this.verifApplyJobs(job_id,detail_candidate_id,type_request)
 
     try {
 
@@ -149,7 +173,7 @@ class CandidateDetailService {
         candidate_id:detail_candidate_id,
         description:description,
         status: "processed",
-        type_request: "candidate_propose",
+        type_request: type_request,
       });
 
       return data;

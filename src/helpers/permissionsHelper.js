@@ -18,8 +18,8 @@ const permissionsHelper = {
             master_time_experience : ['can_show_time_experience','can_create_time_experience','can_update_time_experience','can_delete_time_experience','can_all_operate_time_experience'],
             master_career_level : ['can_show_career_level','can_create_career_level','can_update_career_level','can_delete_career_level','can_all_operate_career_level'],
             master_job : ['can_show_job','can_create_job','can_update_job','can_delete_job','can_all_operate_job'],
-            candidate_behavior : ['can_show_detail_profile','can_update_profile_candidate_behavior','can_add_skill_candidate_behavior','can_all_candidate_behavior'],
-            company_behavior : ['can_show_detail_profile_company','can_update_profile_company_behavior','can_apply_job_candidate','can_show_apply_job_candidate','can_all_company_behavior'],
+            candidate_behavior : ['can_show_detail_profile','can_update_profile_candidate_behavior','can_add_skill_candidate_behavior','can_apply_job_candidate','can_show_apply_job_candidate','can_all_candidate_behavior'],
+            company_behavior : ['can_show_detail_profile_company','can_update_profile_company_behavior','can_given_offer_company_behavior','can_show_apply_job_company_behavior','can_all_company_behavior'],
         };
         return data;
     },
