@@ -226,7 +226,7 @@ class jobsHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_show_job"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_all_candidate_behavior","can_show_job"])
 
       const data = await this._service.getJobBySlug(slug)
 
