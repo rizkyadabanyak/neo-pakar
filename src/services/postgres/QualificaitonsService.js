@@ -18,10 +18,10 @@ const paginationHelper = require("../../helpers/paginationHelper");
 class QualificaitonsService {
 
   async addQualification(name,description) {
-
-    await this.verifyNewQualification(name);
-
     const slug_data = slug(name, '-');
+
+    await this.verifyNewQualification(null,slug_data);
+
 
 
 
@@ -43,9 +43,9 @@ class QualificaitonsService {
   }
   async updateQualification(id, name, description) {
 
+    const slug_data = slug(name, '-');
 
-    await this.verifyNewQualification(name );
-    const slug_data = slug(name, '_');
+    await this.verifyNewQualification(id,slug_data );
 
     try {
       const data = await Qualification.update(
@@ -62,7 +62,13 @@ class QualificaitonsService {
           }
       );
 
-      return data;
+      const return_value = await Qualification.findOne({
+        where : {
+          id : id
+        }
+      })
+
+      return return_value;
 
     }catch (e) {
 
@@ -88,7 +94,13 @@ class QualificaitonsService {
           }
       );
 
-      return data;
+      const return_value = await Qualification.findOne({
+        where : {
+          id : id
+        }
+      })
+
+      return return_value;
 
     }catch (e) {
 
@@ -98,11 +110,28 @@ class QualificaitonsService {
     }
   }
 
-  async verifyNewQualification(name ) {
+  async verifyNewQualification(id,slug) {
+    const id_data = id || '';
 
-    const cek_username = await Qualification.findOne({ where: { name: name } });
-    if (cek_username) {
-      throw new InvariantError("Gagal menambahkan Qualification. qualification sudah ada.");
+    const condition = id_data
+        ? {
+          [Op.and]: {
+            slug: slug,
+            id:{[Op.ne]:id}
+          }
+        }
+        : {
+          [Op.and]: {
+            slug: slug,
+          }
+        };
+
+    const cek = await Qualification.findOne({
+      where: condition
+    });
+
+    if (cek) {
+      throw new InvariantError("Gagal :D. Qualification sudah ada.");
     }
   }
 

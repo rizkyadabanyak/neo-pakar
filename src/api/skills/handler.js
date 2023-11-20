@@ -196,7 +196,7 @@ class rolesHandler {
       return {
         status: "success",
         data: data,
-        message: "Skill berhasil dihapus",
+        message: "Status Skill berhasil dirubah",
       };
 
     } catch (error) {

@@ -19,7 +19,7 @@ class SkillsService {
 
   async addSkill(name,description) {
 
-    await this.verifyNewSkill(name);
+    await this.verifyNewSkill(null,name);
 
     const slug_data = slug(name, '-');
 
@@ -41,30 +41,22 @@ class SkillsService {
 
     }
   }
-  async itsMyUniq(id, slug) {
+  async itsMyData(id, slug) {
     const cek_data = await Skill.findOne({
       where: {
         slug: slug,
         id : id
       }
     });
-
     if (cek_data) {
-      return false
+      return true
     }
-    return true;
+    return false;
   }
   async updateSkill(id, name, description) {
     const slug_data = slug(name, '_');
 
-    const cekMyUniq = await this.itsMyUniq(id,slug_data);
-
-    if (cekMyUniq == true){
-
-    }else {
-
-    }
-    await this.verifyNewSkill(name);
+    await this.verifyNewSkill(id,slug_data);
 
     try {
       const data = await Skill.update(
@@ -81,7 +73,13 @@ class SkillsService {
           }
       );
 
-      return data;
+      const return_value = await Skill.findOne({
+        where : {
+          id : id
+        }
+      })
+
+      return return_value;
 
     }catch (e) {
 
@@ -89,6 +87,7 @@ class SkillsService {
       throw new InvariantError("Skill gagal ditambahkan");
 
     }
+
   }
   async deleteById(id, status) {
 
@@ -107,7 +106,13 @@ class SkillsService {
           }
       );
 
-      return data;
+      const return_value = await Skill.findOne({
+        where : {
+          id : id
+        }
+      })
+
+      return return_value;
 
     }catch (e) {
 
@@ -117,11 +122,28 @@ class SkillsService {
     }
   }
 
-  async verifyNewSkill(name ) {
+  async verifyNewSkill(id,slug) {
+    const id_data = id || '';
 
-    const cek_username = await Skill.findOne({ where: { name: name } });
-    if (cek_username) {
-      throw new InvariantError("Gagal menambahkan Skill. skill sudah ada.");
+    const condition = id_data
+        ? {
+          [Op.and]: {
+            slug: slug,
+            id:{[Op.ne]:id}
+          }
+        }
+        : {
+          [Op.and]: {
+            slug: slug,
+          }
+        };
+
+    const cek = await Skill.findOne({
+      where: condition
+    });
+
+    if (cek) {
+      throw new InvariantError("Gagal :D. skill sudah ada.");
     }
   }
 

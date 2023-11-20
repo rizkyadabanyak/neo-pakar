@@ -42,10 +42,10 @@ class JobsService {
 
 
     // this.addSkillJob(data.id,payload.skill);
-
-    await this.verifyNewJob(payload);
-    await this.verifySkill(payload.skill);
     const slug_data = slug(payload.name, '-');
+
+    await this.verifyNewJob(null,slug_data);
+    await this.verifySkill(payload.skill);
 
 // return ;
     try {
@@ -89,12 +89,14 @@ class JobsService {
     }
   }
   async updateJob(id,company_detail_id, payload) {
+    const slug_data = slug(payload.name, '-');
 
     // await this.verifyNewJob(payload);
+    await this.verifyNewJob(id,slug_data);
+
     await this.verifyYouJobCompany(id,company_detail_id);
     await this.verifySkill(payload.skill);
 
-    const slug_data = slug(payload.name, '-');
 
     try {
       const data = await Job.update(
@@ -178,16 +180,31 @@ class JobsService {
     }
   }
 
-  async verifyNewJob(payload ) {
 
 
-    // console.log(payload.name)
-    // return ;
 
-    const cek = await Job.findOne({ where: { name: payload.name } });
+  async verifyNewJob(id,slug) {
+    const id_data = id || '';
+
+    const condition = id_data
+        ? {
+          [Op.and]: {
+            slug: slug,
+            id:{[Op.ne]:id}
+          }
+        }
+        : {
+          [Op.and]: {
+            slug: slug,
+          }
+        };
+
+    const cek = await Job.findOne({
+      where: condition
+    });
 
     if (cek) {
-      throw new InvariantError("Gagal menambahkan Job. job sudah ada.");
+      throw new InvariantError("Gagal :D. Job sudah ada.");
     }
   }
   async verifySkill(skill ) {

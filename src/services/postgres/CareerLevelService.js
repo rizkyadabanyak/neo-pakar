@@ -18,10 +18,10 @@ const paginationHelper = require("../../helpers/paginationHelper");
 class CareerLevelService {
 
   async addCareerLevel(name,description) {
-
-    await this.verifyNewCareerLevel(name);
-
     const slug_data = slug(name, '-');
+
+    await this.verifyNewCareerLevel(null,slug_data);
+
 
 
 
@@ -43,9 +43,9 @@ class CareerLevelService {
   }
   async updateCareerLevel(id, name, description) {
 
+    const slug_data = slug(name, '-');
 
-    await this.verifyNewCareerLevel(name );
-    const slug_data = slug(name, '_');
+    await this.verifyNewCareerLevel(id,slug_data );
 
     try {
       const data = await CareerLevel.update(
@@ -61,8 +61,14 @@ class CareerLevelService {
             }
           }
       );
+      const return_value = await CareerLevel.findOne({
+        where : {
+          id : id
+        }
+      })
 
-      return data;
+      return return_value;
+
 
     }catch (e) {
 
@@ -87,8 +93,13 @@ class CareerLevelService {
             }
           }
       );
+      const return_value = await CareerLevel.findOne({
+        where : {
+          id : id
+        }
+      })
 
-      return data;
+      return return_value;
 
     }catch (e) {
 
@@ -98,11 +109,29 @@ class CareerLevelService {
     }
   }
 
-  async verifyNewCareerLevel(name ) {
 
-    const cek_username = await CareerLevel.findOne({ where: { name: name } });
-    if (cek_username) {
-      throw new InvariantError("Gagal menambahkan CareerLevel. CareerLevel sudah ada.");
+  async verifyNewCareerLevel(id,slug) {
+    const id_data = id || '';
+
+    const condition = id_data
+        ? {
+          [Op.and]: {
+            slug: slug,
+            id:{[Op.ne]:id}
+          }
+        }
+        : {
+          [Op.and]: {
+            slug: slug,
+          }
+        };
+
+    const cek = await CareerLevel.findOne({
+      where: condition
+    });
+
+    if (cek) {
+      throw new InvariantError("Gagal :D. CareerLevel sudah ada.");
     }
   }
 

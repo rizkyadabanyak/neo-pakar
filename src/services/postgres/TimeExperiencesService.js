@@ -18,11 +18,9 @@ const paginationHelper = require("../../helpers/paginationHelper");
 class TimeExperiencesService {
 
   async addTimeExperience(name,description) {
-
-    await this.verifyNewTimeExperience(name);
-
     const slug_data = slug(name, '-');
 
+    await this.verifyNewTimeExperience(null,slug_data);
 
 
     try {
@@ -37,15 +35,15 @@ class TimeExperiencesService {
     }catch (e) {
 
       console.log(e)
-      throw new InvariantError("User gagal ditambahkan");
+      throw new InvariantError("TimeExperience gagal ditambahkan");
 
     }
   }
   async updateTimeExperience(id, name, description) {
 
-
-    await this.verifyNewTimeExperience(name );
     const slug_data = slug(name, '_');
+
+    await this.verifyNewTimeExperience(id,slug_data );
 
     try {
       const data = await TimeExperience.update(
@@ -61,8 +59,13 @@ class TimeExperiencesService {
             }
           }
       );
+      const return_value = await TimeExperience.findOne({
+        where : {
+          id : id
+        }
+      })
 
-      return data;
+      return return_value;
 
     }catch (e) {
 
@@ -73,8 +76,6 @@ class TimeExperiencesService {
   }
   async deleteById(id, status) {
 
-    // console.log(status);
-    // return ;
     try {
       const data = await TimeExperience.update(
           {
@@ -98,13 +99,32 @@ class TimeExperiencesService {
     }
   }
 
-  async verifyNewTimeExperience(name ) {
 
-    const cek_username = await TimeExperience.findOne({ where: { name: name } });
-    if (cek_username) {
-      throw new InvariantError("Gagal menambahkan TimeExperience. TimeExperience sudah ada.");
+  async verifyNewTimeExperience(id,slug) {
+    const id_data = id || '';
+
+    const condition = id_data
+        ? {
+          [Op.and]: {
+            slug: slug,
+            id:{[Op.ne]:id}
+          }
+        }
+        : {
+          [Op.and]: {
+            slug: slug,
+          }
+        };
+
+    const cek = await TimeExperience.findOne({
+      where: condition
+    });
+
+    if (cek) {
+      throw new InvariantError("Gagal :D. TimeExperience sudah ada.");
     }
   }
+
 
   async getTimeExperienceAll(page_tmp,size_tmp,search_tmp) {
 

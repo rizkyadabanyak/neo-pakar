@@ -18,12 +18,9 @@ const Op = Sequelize.Op;
 class JobTypeWorksServiceService {
 
   async addJobTypeWork(name,description) {
-
-    await this.verifyNewJobTypeWork(name);
-
     const slug_data = slug(name, '-');
 
-
+    await this.verifyNewJobTypeWork(null,slug_data);
 
     try {
       const data = await JobTypeWork.create({
@@ -45,7 +42,7 @@ class JobTypeWorksServiceService {
 
 
     await this.verifyNewJobTypeWork(name );
-    const slug_data = slug(name, '_');
+    const slug_data = slug(name, '-');
 
     try {
       const data = await JobTypeWork.update(
@@ -61,8 +58,13 @@ class JobTypeWorksServiceService {
             }
           }
       );
+      const return_value = await JobTypeWork.findOne({
+        where : {
+          id : id
+        }
+      })
 
-      return data;
+      return return_value;
 
     }catch (e) {
 
@@ -87,8 +89,13 @@ class JobTypeWorksServiceService {
             }
           }
       );
+      const return_value = await JobTypeWork.findOne({
+        where : {
+          id : id
+        }
+      })
 
-      return data;
+      return return_value;
 
     }catch (e) {
 
@@ -97,15 +104,30 @@ class JobTypeWorksServiceService {
 
     }
   }
+  async verifyNewJobTypeWork(id,slug) {
+    const id_data = id || '';
 
-  async verifyNewJobTypeWork(name ) {
+    const condition = id_data
+        ? {
+          [Op.and]: {
+            slug: slug,
+            id:{[Op.ne]:id}
+          }
+        }
+        : {
+          [Op.and]: {
+            slug: slug,
+          }
+        };
 
-    const cek_username = await JobTypeWork.findOne({ where: { name: name } });
-    if (cek_username) {
-      throw new InvariantError("Gagal menambahkan JobTypeWork. qualification sudah ada.");
+    const cek = await JobTypeWork.findOne({
+      where: condition
+    });
+
+    if (cek) {
+      throw new InvariantError("Gagal :D. JobTypeWork sudah ada.");
     }
   }
-
   async getJobTypeWorkAll(page_tmp,size_tmp,search_tmp) {
 
 

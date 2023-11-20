@@ -19,7 +19,7 @@ class RolesService {
 
   async addRole(name,description) {
 
-    await this.verifyNewRole(name );
+    await this.verifyNewRole(null,name );
 
 
     try {
@@ -40,7 +40,7 @@ class RolesService {
   async updateRole(role_id, name, description) {
 
 
-    await this.verifyNewRole(name );
+    await this.verifyNewRole(role_id,name );
 
     try {
       const data = await Role.update(
@@ -56,7 +56,13 @@ class RolesService {
           }
       );
 
-      return data;
+      const return_value = await Role.findOne({
+        where : {
+          id : role_id
+        }
+      })
+
+      return return_value;
 
     }catch (e) {
 
@@ -81,8 +87,13 @@ class RolesService {
             }
           }
       );
+      const return_value = await Role.findOne({
+        where : {
+          id : id
+        }
+      })
 
-      return data;
+      return return_value;
 
     }catch (e) {
 
@@ -92,14 +103,30 @@ class RolesService {
     }
   }
 
-  async verifyNewRole(name ) {
+  async verifyNewRole(id,name) {
+    const id_data = id || '';
 
-    const cek_username = await Role.findOne({ where: { name: name } });
-    if (cek_username) {
-      throw new InvariantError("Gagal menambahkan Role. role sudah ada.");
+    const condition = id_data
+        ? {
+          [Op.and]: {
+            name: name,
+            id:{[Op.ne]:id}
+          }
+        }
+        : {
+          [Op.and]: {
+            name: name,
+          }
+        };
+
+    const cek = await Role.findOne({
+      where: condition
+    });
+
+    if (cek) {
+      throw new InvariantError("Gagal :D. Role sudah ada.");
     }
   }
-
   async getRoleAll(auth,page_tmp,size_tmp,search_tmp) {
     let models = null;
 
