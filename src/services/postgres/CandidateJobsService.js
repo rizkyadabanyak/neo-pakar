@@ -41,6 +41,28 @@ class CandidateDetailService {
 
     return data;
   }
+  async cekCompanyDetail(user_id) {
+    const data = await User.findOne({
+      attributes : ['username','email','full_name','img',],
+      include: [
+        {
+          association: 'company_detail',
+          where : {
+            status_completed: true,
+          }
+        },
+      ],
+      where:{
+        id: user_id,
+      }
+    });
+    if (!data){
+      throw new InvariantError("Belum melengkapi company detail");
+
+    }
+
+    return data;
+  }
 
   async convertSlugToIdJob(slug) {
 
@@ -76,7 +98,8 @@ class CandidateDetailService {
 
   async showApplyJobs(detail_candidate_id,page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp) {
 
-
+    // console.log(detail_candidate_id)
+    // return
     const page = page_tmp || 0;
     const size = size_tmp || 10;
     const search = search_tmp || '';
@@ -84,38 +107,196 @@ class CandidateDetailService {
     const type_request = type_request_tmp || '';
     const { limit, offset } = await paginationHelper.getPagination(page, size);
 
-    // console.log(status);
-    // return ;
-    // const condition = (status && type_request)
-    //     ? {
-    //       [Op.and]: {
-    //         type_request : type_request,
-    //         status : status,
-    //       },
-    //     }
-    //     : null;
-
     let condition = null;
 
-    if (status){
+    if (status && type_request){
       condition = {
         [Op.and]: {
           status : status,
+          type_request : type_request,
+          candidate_id: detail_candidate_id
         },
       };
+
+    }else if (type_request){
+      condition = {
+        [Op.and]: {
+          type_request : type_request,
+          candidate_id: detail_candidate_id
+        },
+      };
+    }else if (status){
+      condition = {
+        [Op.and]: {
+          status : status,
+          candidate_id: detail_candidate_id
+        },
+      };
+    }else {
+      condition = {
+        [Op.and]: {
+          candidate_id: detail_candidate_id
+        },
+      };
+    }
+
+
+    try {
+
+      const models = await combination_candidate_jobs.findAndCountAll({
+        where: condition,
+        include:[
+          {
+            association: 'job',
+            where:{
+              [Op.and]: {
+                name: { [Op.iLike]: `%${search}%` },
+              },
+            },
+            attributes:['name','slug'],
+            include:[
+                {
+                  association:'company_detail',
+                  attributes:['id'],
+                  include:[
+                    {
+                      association:'user',
+                      attributes:['img','full_name'],
+                    }
+                  ]
+                }
+            ]
+          },
+        ],
+        limit,
+        offset,
+      });
+
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
+    }catch (e) {
+      console.log(e)
+      throw new NotFoundError("terjadi kesalahan");
+    }
+  }
+  async givenOffer(detail_company_id,page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp) {
+
+
+    // console.log(detail_company_id)
+    // return ;
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const status = status_tmp || '';
+    const type_request = type_request_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
+
+    let condition = null;
+
+    if (status && type_request){
+      condition = {
+        [Op.and]: {
+          status : status,
+          type_request : type_request,
+        },
+      };
+
     }else if (type_request){
       condition = {
         [Op.and]: {
           type_request : type_request,
         },
       };
-    }else if (status && type_request){
+
+    }else if (status){
+
+      condition = {
+        [Op.and]: {
+          status : status,
+        },
+      };
+
+    }else {
+      condition = null
+    }
+
+    try {
+
+      const models = await combination_candidate_jobs.findAndCountAll({
+        where: condition,
+        include:[
+          {
+            association: 'job',
+            where:{
+              [Op.and]: {
+                name: { [Op.iLike]: `%${search}%` },
+                company_detail_id: detail_company_id
+              },
+            },
+            attributes:['name','slug','company_detail_id'],
+            include:[
+                {
+                  association:'company_detail',
+                  attributes:['id'],
+                  include:[
+                    {
+                      association:'user',
+                      attributes:['img','full_name'],
+                    }
+                  ]
+                }
+            ]
+          },
+        ],
+        limit,
+        offset,
+      });
+
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
+    }catch (e) {
+      console.log(e)
+      throw new NotFoundError("terjadi kesalahan");
+
+    }
+  }
+  async allCandidateJob(page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp) {
+
+
+    // console.log(detail_company_id)
+    // return ;
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const status = status_tmp || '';
+    const type_request = type_request_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
+
+    let condition = null;
+
+    if (status && type_request){
       condition = {
         [Op.and]: {
           status : status,
           type_request : type_request,
         },
       };
+
+    }else if (type_request){
+      condition = {
+        [Op.and]: {
+          type_request : type_request,
+        },
+      };
+
+    }else if (status){
+
+      condition = {
+        [Op.and]: {
+          status : status,
+        },
+      };
+
     }else {
       condition = null
     }
@@ -132,7 +313,7 @@ class CandidateDetailService {
                 name: { [Op.iLike]: `%${search}%` },
               },
             },
-            attributes:['name','slug'],
+            attributes:['name','slug','company_detail_id'],
             include:[
                 {
                   association:'company_detail',

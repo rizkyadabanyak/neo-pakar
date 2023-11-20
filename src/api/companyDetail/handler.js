@@ -50,59 +50,6 @@ class rolesHandler {
     }
   }
 
-  async addSkillHandler(request, h) {
-    try {
-
-      const header = request.headers.authorization;
-      const decodeJwt = decodeJWTHelper.decode(header);
-      const decode_role_id = decodeJwt.role_id;
-      const decode_user_id= decodeJwt.id;
-      const decode_username_as= decodeJwt.username_as
-
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_add_skill_candidate_behavior"])
-
-      this._validator.validateCandidateDetailAddSkillPayload(request.payload);
-      const candidate_detail = await this._service.cekCandidateDetail(decode_user_id)
-
-      const detail_candidate_id = candidate_detail.candidate_detail.id;
-      // return h.response({
-      //   status: "success",
-      //   data: candidate_detail.candidate_detail.id,
-      // });
-
-      // const { name, description } = request.payload;
-
-      const data = await this._service.addSkillCandidate(request.payload.skill,detail_candidate_id);
-
-      const response = h.response({
-        status: "success",
-        message: "skill candidate berhasil ditambahkan",
-        data: data,
-      });
-      response.code(201);
-      return response;
-
-    } catch (error) {
-      if (error instanceof ClientError) {
-        const response = h.response({
-          status: "failed",
-          message: error.message,
-        });
-        response.code(error.statusCode);
-        return response;
-      }
-
-      // Server ERROR!
-      const response = h.response({
-        status: "error",
-        message: "Maaf, terjadi kegagalan pada server kami.",
-      });
-      response.code(500);
-      console.error(error);
-      return response;
-    }
-  }
-
 
   async updatecompanyDetailHandler(request, h) {
     try {
@@ -124,7 +71,7 @@ class rolesHandler {
 
       const response = h.response({
         status: "success",
-        message: "cadidate detail berhasil ditambahkan",
+        message: "company detail berhasil ditambahkan",
         data: data,
       });
       response.code(201);

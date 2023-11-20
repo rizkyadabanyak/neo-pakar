@@ -75,29 +75,41 @@ class rolesHandler {
       const decode_role_id = decodeJwt.role_id;
       const decode_user_id= decodeJwt.id;
       const decode_username_as= decodeJwt.username_as
-
-      const candidate_detail = await this._service.cekCandidateDetail(decode_user_id)
-      const detail_candidate_id = candidate_detail.candidate_detail.id;
+      const decode_as= decodeJwt.as
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_all_company_behavior","can_show_apply_job_candidate","can_show_apply_job_company_behavior"])
       const { page,size,search,status,type_request } = request.query;
 
+
+      let cek_detail,data;
+      if (decode_as == "admin"){
+        data = await this._service.allCandidateJob(page,size,search,status,type_request)
+
+      }else if (decode_as == "company") {
+        cek_detail = await this._service.cekCompanyDetail(decode_user_id)
+        const detail_company_id = cek_detail.company_detail.id;
+
+        data = await this._service.givenOffer(detail_company_id,page,size,search,status,type_request)
+        console.log("detail_company_id = "+detail_company_id)
+      }else {
+        cek_detail = await this._service.cekCandidateDetail(decode_user_id)
+        const detail_candidate_id = cek_detail.candidate_detail.id;
+
+        data = await this._service.showApplyJobs(detail_candidate_id,page,size,search,status,type_request)
+        console.log("detail_candidate_id = "+detail_candidate_id)
+
+      }
       // return h.response({
       //   status: "success",
-      //   message: candidate_detail,
+      //   message: cek_detai,
       // });
-
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_all_company_behavior","can_show_apply_job_candidate","can_show_apply_job_company_behavior"])
-
-      // this._validator.validateCandidateDetailAddSkillPayload(request.payload);
-      const data = await this._service.showApplyJobs(detail_candidate_id,page,size,search,status,type_request)
-
-      // const { name, description } = request.payload;
 
       const response = h.response({
         status: "success",
-        message: "skill candidate berhasil ditambahkan",
+        message: "berhasilkan menampilkan data",
         data: data,
       });
-      response.code(201);
+
+      response.code(200);
       return response;
 
     } catch (error) {
