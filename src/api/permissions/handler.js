@@ -139,11 +139,7 @@ class permissionsHandler {
 
   async getPermissionOnRoleHandler(request, h) {
     try {
-      const { skill_id } = request.params;
-      return h.response({
-        status: "success",
-        data: skill_id,
-      });
+
 
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
