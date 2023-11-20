@@ -92,7 +92,7 @@ const init = async () => {
 
     const authenticationsService = new AuthenticationsService();
     const server = Hapi.server({
-        port: process.env.PORT,
+        port: process.env.PORT_HOST,
         host: process.env.HOST,
         routes: {
             cors: {
