@@ -132,14 +132,12 @@ class AuthenticationsHandler {
 
       // this.sendSMSMessageTwillo(phone_number);
 
-      const userId = await this._usersService.addUser({ name,username,confPassword , email,address, password,as,role_id,phone_number});
+      const data = await this._usersService.addUser({ name,username,confPassword , email,address, password,as,role_id,phone_number});
 
       const response = h.response({
         status: "success",
         message: "User berhasil ditambahkan",
-        data: {
-          userId,
-        },
+        data: data,
       });
 
       response.code(201);
@@ -211,7 +209,7 @@ class AuthenticationsHandler {
         },
       });
 
-      response.code(201);
+      response.code(200);
       return response;
     } catch (error) {
       if (error instanceof ClientError) {
