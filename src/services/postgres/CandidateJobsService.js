@@ -42,6 +42,30 @@ class CandidateDetailService {
     return data;
   }
   async cekCompanyDetail(user_id) {
+    console.log('xxx')
+    return ;
+    const data = await User.findOne({
+      // attributes : ['username','email','full_name','img',],
+      include: [
+        {
+          association: 'company_detail',
+          where : {
+            status_completed: true,
+          }
+        },
+      ],
+      where:{
+        id: user_id,
+      }
+    });
+    if (!data){
+      throw new InvariantError("Belum melengkapi cadidate detail");
+
+    }
+
+    return data;
+  }
+  async cekCompanyDetail(user_id) {
     const data = await User.findOne({
       attributes : ['username','email','full_name','img',],
       include: [
@@ -95,8 +119,7 @@ class CandidateDetailService {
     }
     return data;
   }
-
-  async showApplyJobs(detail_candidate_id,page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp) {
+  async allCandidateJobCandidate(detail_candidate_id,page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp) {
 
     // console.log(detail_candidate_id)
     // return
@@ -179,7 +202,7 @@ class CandidateDetailService {
       throw new NotFoundError("terjadi kesalahan");
     }
   }
-  async givenOffer(detail_company_id,page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp) {
+  async allCandidateJobCompany(detail_company_id,page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp) {
 
 
     // console.log(detail_company_id)
@@ -224,6 +247,7 @@ class CandidateDetailService {
 
       const models = await combination_candidate_jobs.findAndCountAll({
         where: condition,
+        attributes:['id','job_id','candidate_id','status','type_request','createdAt'],
         include:[
           {
             association: 'job',
@@ -340,9 +364,9 @@ class CandidateDetailService {
 
     }
   }
+  async applyJobs(slug_tmp,detail_candidate_id,description) {
 
-  async applyJobs(slug_tmp,detail_candidate_id,description,type_request) {
-
+    const type_request = "candidate_propose";
     const job_id =  await this.convertSlugToIdJob(slug_tmp);
 
     await this.verifApplyJobs(job_id,detail_candidate_id,type_request)
@@ -359,9 +383,33 @@ class CandidateDetailService {
 
       return data;
     }catch (e) {
+      console.log(e)
+      throw new InvariantError("candidates detail gagal ditambahkan");
+    }
+  }
+  async givenOffer(detail_company_id,job_id,candidate_id,description) {
+
+    // return candidate_id
+
+    const type_request = "given_offer";
+
+    await this.verifApplyJobs(job_id,candidate_id,type_request)
+
+    try {
+
+      const data = await combination_candidate_jobs.create({
+        job_id: job_id,
+        candidate_id:candidate_id,
+        description:description,
+        status: "processed",
+        type_request: type_request,
+      });
+
+      return data;
+    }catch (e) {
 
       console.log(e)
-      throw new InvariantError("candidate detail gagal ditambahkan");
+      throw new InvariantError("Gagal melamar candidate");
 
     }
 

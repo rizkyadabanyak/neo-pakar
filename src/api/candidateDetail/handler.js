@@ -82,7 +82,7 @@ class rolesHandler {
 
       const response = h.response({
         status: "success",
-        message: "skill candidate berhasil ditambahkan",
+        message: "skill candidates berhasil ditambahkan",
         data: data,
       });
       response.code(201);

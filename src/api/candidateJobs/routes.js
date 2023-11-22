@@ -11,10 +11,10 @@ const routes = (handler) => {
           multipart: {output: 'stream'},
         }
       },
-      handler: handler.candidateAcceptedApplieddHandler,
+      handler: handler.candidateAcceptedAppliedHandler,
     },{
       method: "POST",
-      path: "/candidateJob/{slug_job}",
+      path: "/candidateJob/applyJob/{slug_job}",
       config: {
         auth: "user_jwt",
         payload: {
@@ -24,6 +24,19 @@ const routes = (handler) => {
         }
       },
       handler: handler.applyJobsHandler,
+    },
+    {
+      method: "POST",
+      path: "/candidateJob/givenOffer",
+      config: {
+        auth: "user_jwt",
+        payload: {
+          parse: true,
+          allow: 'multipart/form-data',
+          multipart: {output: 'stream'},
+        }
+      },
+      handler: handler.givenOfferHandler,
     },
     {
       method: "GET",

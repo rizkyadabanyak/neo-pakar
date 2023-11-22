@@ -65,7 +65,7 @@ class CandidateDetailService {
     }catch (e) {
 
       console.log(e)
-      throw new InvariantError("candidate detail gagal ditambahkan");
+      throw new InvariantError("candidates detail gagal ditambahkan");
 
     }
   }
@@ -127,7 +127,7 @@ class CandidateDetailService {
     }catch (e) {
 
       console.log(e)
-      // throw new InvariantError("candidate detail gagal ditambahkan");
+      // throw new InvariantError("candidates detail gagal ditambahkan");
 
     }
   }

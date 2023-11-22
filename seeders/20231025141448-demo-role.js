@@ -26,7 +26,7 @@ module.exports = {
           updatedAt: new Date()
         },{
           name: 'candidate',
-          description: 'ini role buat candidate',
+          description: 'ini role buat candidates',
           createdAt: new Date(),
           updatedAt: new Date()
         },{

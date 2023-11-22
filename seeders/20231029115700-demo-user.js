@@ -35,7 +35,7 @@ module.exports = {
       },{
         full_name: 'candidate',
         username: 'candidate',
-        email: 'candidate@gmail.com',
+        email: 'candidates@gmail.com',
         password: hashPassword,
         role_id: 3,
         createdAt: new Date(),

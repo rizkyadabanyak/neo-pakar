@@ -5,18 +5,21 @@ const permissionsHelper = require("../../helpers/permissionsHelper");
 
 const {jwtDecode} = require("jwt-decode");
 const InvariantError = require("../../exceptions/InvariantError");
+const CompaniesService = require("../../services/postgres/CompaniesService");
+const companiesService = new CompaniesService();
 
-class rolesHandler {
+class candidateJobsHandler {
   constructor(service, validator) {
 
     this._service = service;
     this._validator = validator;
 
     this.applyJobsHandler = this.applyJobsHandler.bind(this);
+    this.givenOfferHandler = this.givenOfferHandler.bind(this);
     this.showApplyJobsHandler = this.showApplyJobsHandler.bind(this);
-    this.candidateAcceptedApplieddHandler = this.candidateAcceptedApplieddHandler.bind(this);
+    this.candidateAcceptedAppliedHandler = this.candidateAcceptedAppliedHandler.bind(this);
   }
-  async candidateAcceptedApplieddHandler(request, h) {
+  async candidateAcceptedAppliedHandler(request, h) {
     try {
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
@@ -25,6 +28,8 @@ class rolesHandler {
       const decode_username_as= decodeJwt.username_as
       const { slug_job } = request.params;
       const { description,type_request } = request.payload;
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_all_company_behavior","can_apply_job_candidate","can_given_offer_company_behavior"])
+
 
       const candidate_detail = await this._service.cekCandidateDetail(decode_user_id)
       const detail_candidate_id = candidate_detail.candidate_detail.id;
@@ -34,7 +39,6 @@ class rolesHandler {
       //   message: candidate_detail,
       // });
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_all_company_behavior","can_apply_job_candidate","can_given_offer_company_behavior"])
 
       // this._validator.validateCandidateDetailAddSkillPayload(request.payload);
       const data = await this._service.applyJobs(slug_job,detail_candidate_id,description,type_request)
@@ -43,7 +47,7 @@ class rolesHandler {
 
       const response = h.response({
         status: "success",
-        message: "skill candidate berhasil ditambahkan",
+        message: "skill candidates berhasil ditambahkan",
         data: data,
       });
       response.code(201);
@@ -77,7 +81,8 @@ class rolesHandler {
       const decode_user_id= decodeJwt.id;
       const decode_username_as= decodeJwt.username_as
       const { slug_job } = request.params;
-      const { description,type_request } = request.payload;
+      const { description } = request.payload;
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_apply_job_candidate"])
 
       const candidate_detail = await this._service.cekCandidateDetail(decode_user_id)
       const detail_candidate_id = candidate_detail.candidate_detail.id;
@@ -87,16 +92,69 @@ class rolesHandler {
       //   message: candidate_detail,
       // });
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_all_company_behavior","can_apply_job_candidate","can_given_offer_company_behavior"])
 
       // this._validator.validateCandidateDetailAddSkillPayload(request.payload);
-      const data = await this._service.applyJobs(slug_job,detail_candidate_id,description,type_request)
+      const data = await this._service.applyJobs(slug_job,detail_candidate_id,description)
 
       // const { name, description } = request.payload;
 
       const response = h.response({
         status: "success",
-        message: "skill candidate berhasil ditambahkan",
+        message: "skill candidates berhasil ditambahkan",
+        data: data,
+      });
+      response.code(201);
+      return response;
+
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
+  async givenOfferHandler(request, h) {
+    try {
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+      const decode_user_id= decodeJwt.id;
+      const decode_username_as= decodeJwt.username_as
+      const { job_id,candidate_id } = request.query;
+      const { description } = request.payload;
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_given_offer_company_behavior"])
+
+      // const company_detail = await this._service.s(decode_user_id)
+      const company_detail = await companiesService.cekCompanyDetail(decode_user_id);
+
+      const detail_company_id = company_detail.id;
+
+      // return h.response({
+      //   status: "success",
+      //   message: detail_company_id,
+      // });
+
+      // this._validator.validateCandidateDetailAddSkillPayload(request.payload);
+      const data = await this._service.givenOffer(detail_company_id,job_id,candidate_id,description)
+
+      // const { name, description } = request.payload;
+
+      const response = h.response({
+        status: "success",
+        message: "skill candidates berhasil ditambahkan",
         data: data,
       });
       response.code(201);
@@ -142,16 +200,16 @@ class rolesHandler {
         cek_detail = await this._service.cekCompanyDetail(decode_user_id)
         const detail_company_id = cek_detail.company_detail.id;
 
-        data = await this._service.givenOffer(detail_company_id,page,size,search,status,type_request)
+        data = await this._service.allCandidateJobCompany(detail_company_id,page,size,search,status,type_request)
         console.log("detail_company_id = "+detail_company_id)
       }else {
         cek_detail = await this._service.cekCandidateDetail(decode_user_id)
         const detail_candidate_id = cek_detail.candidate_detail.id;
 
-        data = await this._service.showApplyJobs(detail_candidate_id,page,size,search,status,type_request)
+        data = await this._service.allCandidateJobCandidate(detail_candidate_id,page,size,search,status,type_request)
         console.log("detail_candidate_id = "+detail_candidate_id)
-
       }
+
       // return h.response({
       //   status: "success",
       //   message: cek_detai,
@@ -189,4 +247,4 @@ class rolesHandler {
 
 }
 
-module.exports = rolesHandler;
+module.exports = candidateJobsHandler;

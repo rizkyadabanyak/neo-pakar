@@ -4,86 +4,14 @@ const bcrypt = require("bcrypt");
 const InvariantError = require("../../exceptions/InvariantError");
 const NotFoundError = require("../../exceptions/NotFoundError");
 const AuthenticationError = require("../../exceptions/AuthenticationError");
-const {Candidate} = require("../../modelss/Candidate");
 const slug= require('slug');
+const db = require("../../models");
+const Job = db.Job;
+const Skill = db.Skill;
+const User = db.User;
+const paginationHelper = require("../../helpers/paginationHelper");
 
 class CandidatesService {
-
-  async addCandidate({ name,username,confPassword,email,password,address,phone_number }) {
-
-    await this.verifyNewUsername(username);
-
-    const id = `user-${nanoid(16)}`;
-
-    const salt = await bcrypt.genSalt();
-    const hashPassword = await bcrypt.hash(password, salt);
-
-    try {
-      const data = await Candidate.create({
-        candidate_name: name,
-        candidate_username: username,
-        candidate_email: email,
-        candidate_password: hashPassword,
-        candidate_address: address,
-        candidate_phone_number: phone_number,
-      });
-
-      return data.candidate_id;
-
-    }catch (e) {
-
-      throw new InvariantError("User gagal ditambahkan");
-
-    }
-  }
-
-  async verifyNewUsername(username) {
-    const company = await Candidate.findOne({ where: { candidate_username: username } });
-
-
-
-    if (company) {
-      throw new InvariantError("Gagal menambahkan user. Username sudah digunakan.");
-    }
-  }
-
-  async getUserById(userId) {
-    const query = {
-      text: "SELECT id, username, fullname FROM users WHERE id = $1",
-      values: [userId],
-    };
-
-    const result = await this._pool.query(query);
-
-    if (!result.rows.length) {
-      throw new NotFoundError("User tidak ditemukan");
-    }
-
-    return result.rows[0];
-  }
-
-  async verifyCandidateCredential(username, password) {
-
-
-
-
-    const data = await Candidate.findOne({ where: { candidate_username: username } });
-
-
-
-
-
-    if (!data) {
-      throw new InvariantError("Kredensial yang Anda berikan salah");
-    }
-
-    const match = await bcrypt.compare(password, data.candidate_password);
-
-    if (!match) {
-      throw new AuthenticationError("Kredensial yang Anda berikan salah");
-    }
-    return data;
-  }
 
   async getUsersByUsername(username) {
     const query = {
@@ -94,10 +22,77 @@ class CandidatesService {
     return result.rows;
   }
 
-  async allCompany() {
-    const data = await Company.findAll();
+  async getCandidate(page_tmp,size_tmp,search_tmp,skill_tmp) {
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const skill = skill_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
 
-    return data;
+    // if (typeof skill == 'string'){
+    //   console.log("sendirian");
+    //
+    // }else {
+    //   for (let i=0;i<skill_tmp.length;i++){
+    //     skill[i] = parseInt(skill_tmp[i])
+    //   }
+    // }
+    // return ;
+
+    const conditionUser = search
+        ? {
+          [Op.and]: {
+            full_name: { [Op.iLike]: `%${search}%` },
+            role_id: 3
+          },
+        }
+        : {
+          role_id: 3
+        };
+
+    const conditionSkill = search
+        ? {
+          [Op.and]: {
+            full_name: { [Op.iLike]: `%${search}%` },
+            role_id: 3
+          },
+        }
+        : {
+          role_id: 3
+        };
+
+    try {
+
+      const models = await User.findAndCountAll({
+        where: conditionUser,
+        distinct: true,
+        // col: 'User.id',
+        attributes : ['id','username','email','full_name'],
+        include: [
+          {
+            association: 'candidate_detail',
+            where : {
+              status_completed: true,
+            },
+            include:{
+              association: 'Skill',
+              where : {
+                id : skill
+              }
+            }
+          },
+        ],
+        limit,
+        offset,
+      });
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
+    }catch (e) {
+      console.log(e)
+      throw new NotFoundError("terjadi kesalahan");
+
+    }
+
   }
 }
 
