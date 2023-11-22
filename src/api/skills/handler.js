@@ -181,6 +181,7 @@ class rolesHandler {
       return response;
     }
   }
+
   async deleteByIdHandler(request, h) {
     try {
       const { skill_id } = request.params;
@@ -219,7 +220,6 @@ class rolesHandler {
       return response;
     }
   }
-
 }
 
 module.exports = rolesHandler;

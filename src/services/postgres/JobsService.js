@@ -355,7 +355,7 @@ class JobsService {
           association: 'time_experiences',
           attributes : ['name']
         },{
-          association: 'job_skills',
+          association: 'Skill',
           attributes : ['name','slug']
         },{
           association: 'company_detail',

@@ -14,6 +14,60 @@ class rolesHandler {
 
     this.applyJobsHandler = this.applyJobsHandler.bind(this);
     this.showApplyJobsHandler = this.showApplyJobsHandler.bind(this);
+    this.candidateAcceptedApplieddHandler = this.candidateAcceptedApplieddHandler.bind(this);
+  }
+  async candidateAcceptedApplieddHandler(request, h) {
+    try {
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+      const decode_user_id= decodeJwt.id;
+      const decode_username_as= decodeJwt.username_as
+      const { slug_job } = request.params;
+      const { description,type_request } = request.payload;
+
+      const candidate_detail = await this._service.cekCandidateDetail(decode_user_id)
+      const detail_candidate_id = candidate_detail.candidate_detail.id;
+
+      // return h.response({
+      //   status: "success",
+      //   message: candidate_detail,
+      // });
+
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_all_company_behavior","can_apply_job_candidate","can_given_offer_company_behavior"])
+
+      // this._validator.validateCandidateDetailAddSkillPayload(request.payload);
+      const data = await this._service.applyJobs(slug_job,detail_candidate_id,description,type_request)
+
+      // const { name, description } = request.payload;
+
+      const response = h.response({
+        status: "success",
+        message: "skill candidate berhasil ditambahkan",
+        data: data,
+      });
+      response.code(201);
+      return response;
+
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
   }
   async applyJobsHandler(request, h) {
     try {
