@@ -50,16 +50,11 @@ class CandidatesService {
           role_id: 3
         };
 
-    const conditionSkill = search
+    const conditionSkill = skill
         ? {
-          [Op.and]: {
-            full_name: { [Op.iLike]: `%${search}%` },
-            role_id: 3
-          },
+              id: skill,
         }
-        : {
-          role_id: 3
-        };
+        : null;
 
     try {
 
@@ -76,9 +71,7 @@ class CandidatesService {
             },
             include:{
               association: 'Skill',
-              where : {
-                id : skill
-              }
+              where : conditionSkill
             }
           },
         ],

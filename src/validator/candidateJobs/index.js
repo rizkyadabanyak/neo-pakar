@@ -1,9 +1,9 @@
 const InvariantError = require("../../exceptions/InvariantError");
-const { CandidateJobsPayloadSchema,CandidateDetailAddSkillPayloadSchema } = require("./schema");
+const { AcceptApplicationPayloadSchema } = require("./schema");
 
-const CandidateJobsValidator = {
-  validateCandidateJobsPayload: (payload) => {
-    const validationResult = CandidateJobsPayloadSchema.validate(payload);
+const AcceptApplicationValidator = {
+  validateAcceptApplicationPayload: (payload) => {
+    const validationResult = AcceptApplicationPayloadSchema.validate(payload);
 
     if (validationResult.error) {
       throw new InvariantError(validationResult.error.message);
@@ -12,4 +12,4 @@ const CandidateJobsValidator = {
 
 };
 
-module.exports = CandidateJobsValidator;
+module.exports = AcceptApplicationValidator;

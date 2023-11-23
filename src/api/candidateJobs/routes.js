@@ -39,6 +39,32 @@ const routes = (handler) => {
       handler: handler.givenOfferHandler,
     },
     {
+      method: "POST",
+      path: "/candidateJob/acceptApplications",
+      config: {
+        auth: "user_jwt",
+        payload: {
+          parse: true,
+          allow: 'multipart/form-data',
+          multipart: {output: 'stream'},
+        }
+      },
+      handler: handler.acceptApplicationsHandler,
+    },
+    {
+      method: "POST",
+      path: "/candidateJob/acceptOffers",
+      config: {
+        auth: "user_jwt",
+        payload: {
+          parse: true,
+          allow: 'multipart/form-data',
+          multipart: {output: 'stream'},
+        }
+      },
+      handler: handler.acceptOffersHandler,
+    },
+    {
       method: "GET",
       path: "/candidateJob",
       config: {

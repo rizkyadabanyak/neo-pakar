@@ -387,6 +387,115 @@ class CandidateDetailService {
       throw new InvariantError("candidates detail gagal ditambahkan");
     }
   }
+  async cekJobCompany(candidate_job_id,company_detail_id) {
+    const data = await combination_candidate_jobs.findOne(
+        {
+          where: {
+            id : candidate_job_id,
+            type_request: "candidate_propose"
+          },
+          include:[
+            {
+              association : 'job',
+              where:{
+                company_detail_id : company_detail_id
+              }
+            }
+          ]
+        }
+    );
+
+    if (!data){
+      throw new InvariantError("ini bukan ditujukan untuk company anda");
+
+    }
+
+    console.log(data)
+    return data;
+
+  }
+  async acceptApplication(candidate_job_id,company_detail_id,status) {
+
+    const cek = await this.cekJobCompany(candidate_job_id,company_detail_id)
+
+    try {
+
+      const data = await combination_candidate_jobs.update(
+          {
+            status: status,
+          },
+          {
+            where: {
+              id : candidate_job_id,
+            }
+          }
+      );
+
+      const show = await combination_candidate_jobs.findOne({
+        where:{
+          id : candidate_job_id,
+
+        }
+      });
+
+      return show;
+    }catch (e) {
+      console.log(e)
+      throw new InvariantError("gagal merubah status");
+    }
+  }
+  async cekOfferCandidate(candidate_job_id,detail_candidate_id) {
+    const data = await combination_candidate_jobs.findOne(
+        {
+          where: {
+            id : candidate_job_id,
+            candidate_id: detail_candidate_id,
+            type_request: "given_offer"
+            ,
+          },
+        }
+    );
+
+    if (!data){
+      throw new InvariantError("ini bukan ditujukan untuk anda");
+
+    }
+
+    console.log(data)
+    return data;
+
+  }
+
+  async acceptOffers(candidate_job_id,detail_candidate_id,status) {
+
+    const cek = await this.cekOfferCandidate(candidate_job_id,detail_candidate_id)
+
+    try {
+
+      const data = await combination_candidate_jobs.update(
+          {
+            status: status,
+          },
+          {
+            where: {
+              id : candidate_job_id,
+            }
+          }
+      );
+
+      const show = await combination_candidate_jobs.findOne({
+        where:{
+          id : candidate_job_id,
+
+        }
+      });
+
+      return show;
+    }catch (e) {
+      console.log(e)
+      throw new InvariantError("gagal merubah status");
+    }
+  }
   async givenOffer(detail_company_id,job_id,candidate_id,description) {
 
     // return candidate_id

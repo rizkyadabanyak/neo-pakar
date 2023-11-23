@@ -240,7 +240,7 @@ class JobsService {
   }
 
 
-  async getJobAll(as,page_tmp,size_tmp,search_tmp) {
+  async getJobAll(as,page_tmp,size_tmp,search_tmp,career_levels_tmp,job_type_works_tmp) {
     let role;
 
 
@@ -254,6 +254,9 @@ class JobsService {
     const page = page_tmp || 0;
     const size = size_tmp || 10;
     const search = search_tmp || '';
+    const career_levels = career_levels_tmp || '';
+    const job_type_works = job_type_works_tmp || '';
+
     const { limit, offset } = await paginationHelper.getPagination(page, size);
 
     try {
@@ -296,17 +299,42 @@ class JobsService {
             };
       }
 
+      let condition_career_level,condition_job_type_works ;
+
+      if (career_levels&&job_type_works){
+        condition_career_level = {
+          id:career_levels
+        }
+        condition_job_type_works = {
+          id: job_type_works
+        }
+      }else if (career_levels){
+        // console.log('sini')
+        condition_career_level = {
+          id:career_levels
+        }
+      }else if (job_type_works){
+        condition_job_type_works = {
+          id: job_type_works
+        }
+      }else {
+        condition_career_level= null;
+        condition_job_type_works= null;
+      }
       models = await Job.findAndCountAll({
         include:[
           {
             association: 'job_type_work',
-            attributes : ['name'],
+            attributes : ['id','name'],
+            where:condition_job_type_works
+
           }, {
             association: 'qualification',
             attributes : ['name']
           },{
             association: 'career_level',
-            attributes : ['name']
+            attributes : ['id','name'],
+            where:condition_career_level
           },{
             association: 'time_experiences',
             attributes : ['name']

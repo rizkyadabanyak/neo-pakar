@@ -1,9 +1,10 @@
 const Joi = require("joi");
 
-const CandidateJobsPayloadSchema = Joi.object({
-
-
+const AcceptApplicationPayloadSchema = Joi.object({
+    candidate_job_id: Joi.required(),
+    status: Joi.string()
+        .required(),
 });
 
 
-module.exports = { CandidateJobsPayloadSchema };
+module.exports = { AcceptApplicationPayloadSchema };
