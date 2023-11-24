@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR="$HOME/backend"
+DIR="/home/ubuntu/environment/backend"
 cd $DIR
 
 export NVM_DIR="$HOME/.nvm"

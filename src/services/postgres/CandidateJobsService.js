@@ -180,7 +180,7 @@ class CandidateDetailService {
             include:[
                 {
                   association:'company_detail',
-                  attributes:['id'],
+                  attributes:['id','address'],
                   include:[
                     {
                       association:'user',
@@ -261,7 +261,7 @@ class CandidateDetailService {
             include:[
                 {
                   association:'company_detail',
-                  attributes:['id'],
+                  attributes:['id','address'],
                   include:[
                     {
                       association:'user',
@@ -341,7 +341,7 @@ class CandidateDetailService {
             include:[
                 {
                   association:'company_detail',
-                  attributes:['id'],
+                  attributes:['id','address'],
                   include:[
                     {
                       association:'user',
