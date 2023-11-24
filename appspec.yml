@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/backend_neo
+    destination: /home/environment/backend
 hooks:
   BeforeInstall:
     - location: scripts/before_install.sh
