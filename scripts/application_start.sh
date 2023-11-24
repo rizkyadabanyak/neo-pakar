@@ -9,4 +9,5 @@ export NVM_DIR="$HOME/.nvm"
 
 npm install
 #nodemon index.js
+npm start-dev
 node index.js > app.out.log 2> app.err.log < /dev/null &
