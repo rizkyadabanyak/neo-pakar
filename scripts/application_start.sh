@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIR="/home/ubuntu/environment/backend"
+DIR="/home/ubuntu/environment/neo-pakar"
 cd $DIR
 
 export NVM_DIR="$HOME/.nvm"
