@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/environment/neo-pakar
+    destination: /home/ubuntu/environment/backend
 hooks:
   BeforeInstall:
     - location: scripts/before_install.sh
