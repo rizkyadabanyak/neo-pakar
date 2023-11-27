@@ -76,6 +76,10 @@ const CandidateJobsValidator = require("./validator/candidateJobs");
 const candidates = require("./api/candidates");
 const CandidatesService = require("./services/postgres/CandidatesService");
 
+// companyVerif
+const companyVerif = require("./api/companyVerif");
+const CompanyVerifService = require("./services/postgres/CompanyVerifService");
+const comanyVerifValidator = require("./validator/comanyVerif");
 
 // base master validator
 const MasterDataValidator = require("./validator/masterData");
@@ -97,6 +101,7 @@ const init = async () => {
     const companyDetailService = new CompanyDetailService();
     const candidateJobsService = new CandidateJobsService();
     const candidatesService = new CandidatesService();
+    const companyVerifService = new CompanyVerifService();
 
     const authenticationsService = new AuthenticationsService();
     const server = Hapi.server({
@@ -234,6 +239,13 @@ const init = async () => {
             plugin: candidates,
             options: {
                 service: candidatesService,
+            },
+        },{
+            plugin: companyVerif,
+            options: {
+                service: companyVerifService,
+                validator: comanyVerifValidator,
+
             },
         },
         // {

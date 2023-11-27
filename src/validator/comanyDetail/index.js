@@ -1,7 +1,7 @@
 const InvariantError = require("../../exceptions/InvariantError");
 const { CompanyDetailPayloadSchema,CandidateDetailAddSkillPayloadSchema } = require("./schema");
 
-const CandidateDetailValidator = {
+const CompanyDetailValidator = {
   validateCompanyDetailPayload: (payload) => {
     const validationResult = CompanyDetailPayloadSchema.validate(payload);
 
@@ -12,4 +12,4 @@ const CandidateDetailValidator = {
 
 };
 
-module.exports = CandidateDetailValidator;
+module.exports = CompanyDetailValidator;

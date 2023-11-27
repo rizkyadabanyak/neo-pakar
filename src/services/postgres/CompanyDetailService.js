@@ -17,7 +17,7 @@ const uploadFileHelper = require("../../helpers/uploadFileHelper");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
-class CandidateDetailService {
+class CompanyDetailService {
   async verifySkill(skill ) {
 
     for (let i=0;i<skill.length;i++){
@@ -187,4 +187,4 @@ class CandidateDetailService {
   }
 }
 
-module.exports = CandidateDetailService;
+module.exports = CompanyDetailService;
