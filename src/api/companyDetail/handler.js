@@ -5,6 +5,8 @@ const permissionsHelper = require("../../helpers/permissionsHelper");
 
 const {jwtDecode} = require("jwt-decode");
 const InvariantError = require("../../exceptions/InvariantError");
+const CompaniesService = require("../../services/postgres/CompaniesService");
+const companiesService = new CompaniesService();
 
 class rolesHandler {
   constructor(service, validator) {
@@ -59,6 +61,8 @@ class rolesHandler {
       const decode_role_id = decodeJwt.role_id;
       const decode_user_id= decodeJwt.id;
       const decode_username_as= decodeJwt.username_as
+
+      const company_detail = await companiesService.cekCompanyDetail(decode_user_id);
 
       await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_update_profile_company_behavior"])
 

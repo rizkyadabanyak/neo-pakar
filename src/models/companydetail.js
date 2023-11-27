@@ -34,7 +34,11 @@ module.exports = (sequelize, DataTypes) => {
     status_disband: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    },status_completed: {
+    },status_verif: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    status_completed: {
       type: DataTypes.BOOLEAN
     },
   }, {

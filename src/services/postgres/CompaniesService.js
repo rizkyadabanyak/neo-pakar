@@ -15,27 +15,30 @@ const Op = Sequelize.Op;
 class CompaniesService {
   async cekCompanyDetail(user_id,) {
 
-    try {
-      const data = await CompanyDetail.findOne({
-        where : {
-          user_id : user_id,
-          status_completed: true,
-        }
-      })
+    const data = await CompanyDetail.findOne({
+      where : {
+        user_id : user_id,
+        status_completed: true,
+        // status_verif: true,
+      }
+    })
 
-      if (data){
-        return data;
+    console.log(data.status_verif);
+    // return data.status_verif;
+
+    if (data){
+
+      if (data.status_verif == false){
+        throw new InvariantError("company belum mendapatkan persetujuan admin");
+
       }
 
-      throw new InvariantError("company belum melengkapi profil");
-
-
-    }catch (e) {
-
-      console.log(e)
-      throw new InvariantError("company belum melengkapi profil");
+      return data;
 
     }
+
+    throw new InvariantError("company belum melengkapi profil");
+
   }
 
   async addCompany({ name,username,confPassword , email,address, password }) {

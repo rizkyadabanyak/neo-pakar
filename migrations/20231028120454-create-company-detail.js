@@ -32,6 +32,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
+      status_verif: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       status_disband: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
