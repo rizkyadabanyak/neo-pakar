@@ -5,11 +5,6 @@ const routes = (handler) => {
       path: "/permissions/{role_id}",
       config: {
         auth: "user_jwt",
-        payload: {
-          parse: true,
-          allow: 'multipart/form-data',
-          multipart: {output: 'stream'},
-        }
       },
       handler: handler.setRolePermissionHandler,
     },{
