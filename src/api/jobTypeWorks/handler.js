@@ -73,6 +73,7 @@ class jobTypeWorksHandler {
       this._validator.validateMasterDataPayload(request.payload);
       const { name, description } = request.payload;
 
+      // return description;
       const data = await this._service.updateJobTypeWork(job_type_work_id, name, description);
 
       const response = h.response({

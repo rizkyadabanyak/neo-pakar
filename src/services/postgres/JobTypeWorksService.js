@@ -40,9 +40,11 @@ class JobTypeWorksServiceService {
   }
   async updateJobTypeWork(id, name, description) {
 
-
-    await this.verifyNewJobTypeWork(name );
     const slug_data = slug(name, '-');
+
+    await this.verifyNewJobTypeWork(id,slug_data );
+
+    // return slug_data;
 
     try {
       const data = await JobTypeWork.update(
