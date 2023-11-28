@@ -80,7 +80,7 @@ class jobTypeWorksHandler {
         message: "JobTypeWork berhasil dirubah",
         data: data,
       });
-      response.code(201);
+      response.code(200);
       return response;
 
     } catch (error) {
