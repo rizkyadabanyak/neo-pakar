@@ -130,7 +130,7 @@ class CompanyVerifHandler {
 
       const response = h.response({
         status: "success",
-        message: "company detail berhasil ditambahkan",
+        message: "berhasil merubah status",
         data: data,
       });
       response.code(201);
