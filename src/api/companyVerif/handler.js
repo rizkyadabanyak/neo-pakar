@@ -133,7 +133,7 @@ class CompanyVerifHandler {
         message: "berhasil merubah status",
         data: data,
       });
-      response.code(201);
+      response.code(200);
       return response;
 
     } catch (error) {

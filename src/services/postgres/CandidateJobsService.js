@@ -271,6 +271,16 @@ class CandidateDetailService {
                 }
             ]
           },
+          {
+            association:'CandidateDetail',
+            attributes:['id','address'],
+            include:[
+              {
+                association:'user',
+                attributes:['img','full_name'],
+              }
+            ]
+          },
         ],
         limit,
         offset,

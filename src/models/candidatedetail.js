@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
         otherKey: "candidate_id",
         as: "Job",
       });
+      this.belongsTo(models.User, {
+        foreignKey: "user_id",
+        as: "user",
+      });
     }
   }
   CandidateDetail.init({
