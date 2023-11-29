@@ -15,6 +15,7 @@ const Role = db.Role;
 const User = db.User;
 
 const Sequelize = require('sequelize');
+const paginationHelper = require("../../helpers/paginationHelper");
 const Op = Sequelize.Op;
 
 
@@ -59,6 +60,46 @@ class UsersService {
 
     }
   }
+  async updateUsers({ user_id,name,username,confPassword , email,address, password,as,role_id ,phone_number}) {
+
+    await this.verifyNewUserCompany(username,email);
+
+
+    const salt = await bcrypt.genSalt();
+    const hashPassword = await bcrypt.hash(password, salt);
+    const slug_data = slug(name, '-');
+
+    try {
+      const user = await User.update({
+        role_id: role_id,
+        full_name: name,
+        slug: slug_data,
+        username: username,
+        email: email,
+        password: hashPassword
+      },{
+        where: {
+          id : user_id
+        }
+      });
+
+      if (role_id == 2){
+        companyDetailService.addTmpCompanyDetail(user.id,phone_number);
+        console.log('company');
+      }else {
+
+        candidateDetailService.addTmpCandidateDetail(user.id,phone_number);
+        console.log('candidate');
+      }
+      return user.id;
+
+    }catch (e) {
+
+      console.log(e)
+      throw new InvariantError("User gagal ditambahkan");
+
+    }
+  }
 
   async verifyNewUserCompany(username,email) {
 
@@ -79,12 +120,54 @@ class UsersService {
     }
   }
 
-  async getUserAll(userId) {
+  async getUserAll(page_tmp,size_tmp,search_tmp,role_tmp) {
+
+
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const role = role_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
+
+    let condition ;
+
+    if (search && role){
+      condition = {
+        [Op.and]: {
+          full_name: {[Op.iLike]: `%${search}%`},
+          role_id: role,
+        }
+      };
+    }else if(search){
+      // console.log('sini')
+      condition = {
+        [Op.or]: {
+          full_name: {[Op.iLike]: `%${search}%`},
+        }
+      };
+    }else if (role){
+      console.log('sini')
+      condition = {
+        [Op.or]: {
+          role_id: role,
+        }
+      };
+    }else {
+      condition = null;
+    }
+
+
 
     try {
-      const data = await User.findAll();
 
-      return data;
+      const models = await User.findAndCountAll({
+        where: condition,
+        limit,
+        offset,
+      });
+
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
 
     }catch (e) {
       throw new NotFoundError("terjadi kesalahan");
@@ -93,20 +176,6 @@ class UsersService {
 
   }
 
-  async getUserById(userId) {
-    const query = {
-      text: "SELECT id, username, fullname FROM users WHERE id = $1",
-      values: [userId],
-    };
-
-    const result = await this._pool.query(query);
-
-    if (!result.rows.length) {
-      throw new NotFoundError("User tidak ditemukan");
-    }
-
-    return result.rows[0];
-  }
   async getProfile(decodeJwt) {
     var data ;
     try {
