@@ -156,8 +156,6 @@ class UsersService {
       condition = null;
     }
 
-
-
     try {
 
       const models = await User.findAndCountAll({

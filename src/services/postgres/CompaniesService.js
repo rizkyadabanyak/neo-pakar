@@ -18,12 +18,13 @@ class CompaniesService {
     const data = await CompanyDetail.findOne({
       where : {
         user_id : user_id,
-        status_completed: true,
+        // status_completed: true,
         // status_verif: true,
       }
     })
 
-    console.log(data.status_verif);
+    // console.log(data);
+    // return ;
     // return data.status_verif;
 
     if (data){
