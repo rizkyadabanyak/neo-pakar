@@ -30,13 +30,10 @@ class jobsHandler {
 
       const company_detail = await companiesService.cekCompanyDetail(user_id);
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_create_job"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_all_operate_job","can_create_job"])
       this._validator.validateJobsPayload(request.payload);
       //
-      // return h.response({
-      //   status: "success",
-      //   data: request.payload,
-      // });
+
 
       // const { name, description } = request.payload;
 
@@ -80,7 +77,7 @@ class jobsHandler {
 
       const company_detail = await companiesService.cekCompanyDetail(user_id);
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_update_job"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_all_operate_job","can_update_job"])
 
       const { job_id } = request.params;
       this._validator.validateJobsPayload(request.payload);
@@ -137,7 +134,7 @@ class jobsHandler {
 
         const company_detail = await companiesService.cekCompanyDetail(user_id);
 
-        await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_show_job"])
+        await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_all_operate_job","can_show_job"])
 
         data = await this._service.getJobAll(company_detail,page,size,search,career_levels,job_type_works);
 
@@ -189,7 +186,7 @@ class jobsHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_show_job"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_all_operate_job","can_show_job"])
 
       const data = await this._service.getJobById(job_id)
 
@@ -226,7 +223,7 @@ class jobsHandler {
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_all_candidate_behavior","can_show_job"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_all_operate_job","can_all_candidate_behavior","can_show_job"])
 
       const data = await this._service.getJobBySlug(slug)
 
@@ -264,7 +261,7 @@ class jobsHandler {
       const user_id = decodeJwt.id;
       const company_detail = await companiesService.cekCompanyDetail(user_id);
 
-      await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_delete_job"])
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_all_operate_job","can_delete_job"])
 
       const data = await this._service.deleteById(job_id,company_detail.id, request.payload,status)
 

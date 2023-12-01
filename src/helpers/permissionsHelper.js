@@ -27,11 +27,11 @@ const permissionsHelper = {
     cekPermission: async(role_id,permission) =>{
         const you_permission = await permissionsService.getYouPermission(role_id);
 
+
         const cek_can_access_everything = you_permission.includes("can_access_everything")
         const cek_all_permission_access = you_permission.includes(permission[0])
         const cek = you_permission.includes(permission[1])
 
-        // console.log(cek_all_permission_access);
 
 
         if (cek_can_access_everything==false && cek_all_permission_access==false && cek==false){

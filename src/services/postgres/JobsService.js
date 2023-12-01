@@ -40,8 +40,6 @@ class JobsService {
 
   async addJob(company_detail_id,payload) {
 
-
-    // this.addSkillJob(data.id,payload.skill);
     const slug_data = slug(payload.name, '-');
 
     await this.verifyNewJob(null,slug_data);
@@ -153,8 +151,8 @@ class JobsService {
   }
   async deleteById(id,company_detail_id, payload, status) {
 
-    // console.log(status);
-    // return ;
+    // console.log(company_detail_id);
+    return company_detail_id;
     await this.verifyYouJobCompany(id,company_detail_id);
 
     try {

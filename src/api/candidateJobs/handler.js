@@ -49,7 +49,7 @@ class candidateJobsHandler {
 
       const response = h.response({
         status: "success",
-        message: "skill candidates berhasil ditambahkan",
+        message: "Status berhasil dirubah",
         data: data,
       });
       response.code(201);
@@ -84,15 +84,12 @@ class candidateJobsHandler {
       const decode_username_as= decodeJwt.username_as
       const { slug_job } = request.params;
       const { description } = request.payload;
+
       await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_apply_job_candidate"])
 
       const candidate_detail = await this._service.cekCandidateDetail(decode_user_id)
       const detail_candidate_id = candidate_detail.candidate_detail.id;
 
-      // return h.response({
-      //   status: "success",
-      //   message: candidate_detail,
-      // });
 
 
       // this._validator.validateCandidateDetailAddSkillPayload(request.payload);
@@ -102,7 +99,7 @@ class candidateJobsHandler {
 
       const response = h.response({
         status: "success",
-        message: "skill candidates berhasil ditambahkan",
+        message: "Anda berhasil melamar pekerjaan",
         data: data,
       });
       response.code(201);
@@ -265,7 +262,7 @@ class candidateJobsHandler {
 
       const response = h.response({
         status: "success",
-        message: "skill candidates berhasil ditambahkan",
+        message: "Status berhasil dirubah",
         data: data,
       });
       response.code(201);

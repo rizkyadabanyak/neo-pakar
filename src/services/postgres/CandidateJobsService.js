@@ -168,6 +168,7 @@ class CandidateDetailService {
 
       const models = await combination_candidate_jobs.findAndCountAll({
         where: condition,
+        attributes:['id','job_id','candidate_id','status','type_request','createdAt'],
         include:[
           {
             association: 'job',
@@ -480,6 +481,7 @@ class CandidateDetailService {
 
     const cek = await this.cekOfferCandidate(candidate_job_id,detail_candidate_id)
 
+    return ;
     try {
 
       const data = await combination_candidate_jobs.update(
