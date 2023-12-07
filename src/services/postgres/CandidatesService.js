@@ -13,14 +13,6 @@ const paginationHelper = require("../../helpers/paginationHelper");
 
 class CandidatesService {
 
-  async getUsersByUsername(username) {
-    const query = {
-      text: "SELECT id, username, fullname FROM users WHERE username LIKE $1",
-      values: [`%${username}%`],
-    };
-    const result = await this._pool.query(query);
-    return result.rows;
-  }
 
   async getCandidate(page_tmp,size_tmp,search_tmp,skill_tmp) {
     const page = page_tmp || 0;

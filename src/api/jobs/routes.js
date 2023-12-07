@@ -47,7 +47,8 @@ const routes = (handler) => {
         auth: "user_jwt",
       },
       handler: handler.deleteByIdHandler,
-    },{
+    },
+    {
       method: "GET",
       path: "/jobs",
       config: {

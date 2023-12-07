@@ -117,7 +117,7 @@ class jobsHandler {
   async getAllJobHandler(request, h) {
 
     try {
-      const { page,size,search,career_levels,job_type_works } = request.query;
+      const { page,size,search,career_levels,job_type_works,skill } = request.query;
 
 
 
@@ -136,17 +136,17 @@ class jobsHandler {
 
         await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_all_operate_job","can_show_job"])
 
-        data = await this._service.getJobAll(company_detail,page,size,search,career_levels,job_type_works);
+        data = await this._service.getJobAll(company_detail,page,size,search,career_levels,job_type_works,skill);
 
       }else if (as_role == "admin") {
 
         await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_show_job"])
 
-        data = await this._service.getJobAll(as_role,page,size,search,career_levels,job_type_works);
+        data = await this._service.getJobAll(as_role,page,size,search,career_levels,job_type_works,skill);
 
       }else {
 
-        data = await this._service.getJobAll(as_role,page,size,search,career_levels,job_type_works);
+        data = await this._service.getJobAll(as_role,page,size,search,career_levels,job_type_works,skill);
 
       }
 

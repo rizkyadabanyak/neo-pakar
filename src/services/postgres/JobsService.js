@@ -238,7 +238,7 @@ class JobsService {
   }
 
 
-  async getJobAll(as,page_tmp,size_tmp,search_tmp,career_levels_tmp,job_type_works_tmp) {
+  async getJobAll(as,page_tmp,size_tmp,search_tmp,career_levels_tmp,job_type_works_tmp,skill_tmp) {
     let role;
 
 
@@ -254,10 +254,17 @@ class JobsService {
     const search = search_tmp || '';
     const career_levels = career_levels_tmp || '';
     const job_type_works = job_type_works_tmp || '';
+    const skill = skill_tmp || '';
 
     const { limit, offset } = await paginationHelper.getPagination(page, size);
 
     try {
+      const conditionSkill = skill
+          ? {
+            id: skill,
+          }
+          : null;
+
       let models,condition;
       if (role == "company"){
 
@@ -319,6 +326,7 @@ class JobsService {
         condition_career_level= null;
         condition_job_type_works= null;
       }
+
       models = await Job.findAndCountAll({
         include:[
           {
@@ -347,8 +355,12 @@ class JobsService {
               attributes : ['full_name','img'],
 
             }]
-          },
+          },{
+            association: 'Skill',
+            where : conditionSkill
+          }
         ],
+        distinct: true,
         where: condition,
         limit,
         offset,
