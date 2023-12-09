@@ -51,46 +51,46 @@ class AuthenticationsHandler {
 //           console.error(err, err.stack);
 //         });
 //   }
-//   async sendSMSMessageTwillo(phone_number) {
-//
-//     const randomDigit = Math.floor(10000 + Math.random() * 99999);
-//     // return randomDigit;
-//
-//
-//     // return job;
-//
-//     const removeNOL = phone_number.substring(1);
-//
-//     // return removeNOL;
-//
-//     try {
-//       client.messages
-//           .create({
-//             body: 'your code '+randomDigit,
-//             from: 'whatsapp:+14155238886',
-//             to: 'whatsapp:+62'+ removeNOL
-//           });
-//
-//       return {
-//         message : 'success send otp',
-//         status : "success",
-//         statusCode : 200
-//
-//       }
-//
-//     } catch (error) {
-//
-//       console.log(error);
-//       return{
-//         message : error,
-//         data : null,
-//         status : "danger",
-//         statusCode : 400
-//
-//       }
-//     }
-//
-//   }
+  // async sendSMSMessageTwillo(phone_number) {
+  //
+  //   const randomDigit = Math.floor(10000 + Math.random() * 99999);
+  //   // return randomDigit;
+  //
+  //
+  //   // return job;
+  //
+  //   const removeNOL = phone_number.substring(1);
+  //
+  //   // return removeNOL;
+  //
+  //   try {
+  //     client.messages
+  //         .create({
+  //           body: 'your code '+randomDigit,
+  //           from: 'whatsapp:+14155238886',
+  //           to: 'whatsapp:+62'+ removeNOL
+  //         });
+  //
+  //     return {
+  //       message : 'success send otp',
+  //       status : "success",
+  //       statusCode : 200
+  //
+  //     }
+  //
+  //   } catch (error) {
+  //
+  //     console.log(error);
+  //     return{
+  //       message : error,
+  //       data : null,
+  //       status : "danger",
+  //       statusCode : 400
+  //
+  //     }
+  //   }
+  //
+  // }
   async fileHandler(request, h) {
     try {
       // const { role_id } = request.params;
