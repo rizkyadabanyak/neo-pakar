@@ -57,6 +57,11 @@ const routes = (handler) => [
     path: '/images/{file_path*}',  // The route parameter * allows for nested paths
     handler: handler.fileHandler,
   },
+  {
+    method: "GET",
+    path: '/testNO',  // The route parameter * allows for nested paths
+    handler: handler.sendEmailSNS,
+  },
 ];
 
 module.exports = routes;

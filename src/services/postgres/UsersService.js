@@ -213,13 +213,59 @@ class UsersService {
     return data;
   }
 
-  async getUsersByUsername(username) {
-    const query = {
-      text: "SELECT id, username, fullname FROM users WHERE username LIKE $1",
-      values: [`%${username}%`],
-    };
-    const result = await this._pool.query(query);
-    return result.rows;
+  async getUserByid(user_id) {
+    var data ;
+    try {
+
+      const cekRole = await User.findOne({
+        where:{
+          id : user_id,
+        }
+      });
+
+      if (cekRole.role_id == 2){
+
+        data = await User.findOne({
+          where :{
+            [Op.and]: {
+              id : cekRole.id,
+              role_id: cekRole.role_id,
+            },
+          },
+          include: [
+            {
+              association: 'company_detail',
+            },
+          ]
+        });
+
+      }else {
+        data = await User.findOne({
+
+          where :{
+            [Op.and]: {
+              id : cekRole.id,
+              role_id: cekRole.role_id,
+            },
+          },
+          include: [
+            {
+
+              association: 'candidate_detail',
+              include:{
+                association: 'Skill',
+              }
+            },
+
+          ]
+        });
+
+      }
+      return data;
+
+    }catch (e) {
+      throw new NotFoundError("profile tidak ditemukan");
+    }
   }
 }
 

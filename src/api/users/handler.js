@@ -13,6 +13,7 @@ class UsersHandler {
     this.updateUserHandler = this.updateUserHandler.bind(this);
     this.getUserAllHandler = this.getUserAllHandler.bind(this);
     this.getUserProfileHandler = this.getUserProfileHandler.bind(this);
+    this.getUserByIdHandler = this.getUserByIdHandler.bind(this);
   }
 
   async postUserHandler(request, h) {
@@ -177,14 +178,24 @@ class UsersHandler {
     }
   }
 
-  async getUsersByUsernameHandler(request, h) {
+  async getUserByIdHandler(request, h) {
     try {
-      const { username = "" } = request.query;
-      const users = await this._service.getUsersByUsername(username);
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+
+      await permissionsHelper.cekPermission(decode_role_id,[""])
+
+
+
+      const { user_id } = request.params;
+
+      const user = await this._service.getUserByid(user_id);
+
       return {
         status: "success",
         data: {
-          users,
+          user,
         },
       };
     } catch (error) {

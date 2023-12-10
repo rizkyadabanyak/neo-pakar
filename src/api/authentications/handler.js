@@ -10,6 +10,9 @@ const client = require('twilio')(accountSid, authToken);
 require('dotenv').config();
 var AWS = require('aws-sdk');
 
+// const credentials = new AWS.SharedIniFileCredentials();
+const sns = new AWS.SNS({ region: process.env.REGION});
+
 class AuthenticationsHandler {
   constructor(authenticationsService, usersService, tokenManager, validator) {
     this._authenticationsService = authenticationsService;
@@ -22,35 +25,70 @@ class AuthenticationsHandler {
     this.putAuthenticationHandler = this.putAuthenticationHandler.bind(this);
     this.deleteAuthenticationHandler = this.deleteAuthenticationHandler.bind(this);
     this.fileHandler = this.fileHandler.bind(this);
+    // this.sendSMSMessage = this.sendSMSMessage.bind(this);
+    this.sendEmailSNS = this.sendEmailSNS.bind(this);
   }
 
-//   async sendSMSMessage(sns, params) {
-//     AWS.config.update({
-//       region: process.env.REGION,
-//       credentials: {
-//         accessKeyId: process.env.AWS_ACCESS_KEY, // AWS access key from environment variables
-//         secretAccessKey: process.env.AWS_SECRET_KEY // AWS secret key from environment variables
-//       }
-//     });
+  async sendEmailSNS() {
+    AWS.config.update({
+      region: process.env.REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY, // AWS access key from environment variables
+        secretAccessKey: process.env.AWS_SECRET_KEY // AWS secret key from environment variables
+      }
+    });
+
+    let params = {
+      Protocol: 'EMAIL',
+      TopicArn: 'arn:aws:sns:ap-southeast-1:161122433049:sendEmail',
+      Endpoint: "riskipatra4@gmail.com"
+    };
+
+    sns.subscribe(params, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(data);
+      }
+    });
+  }
+//   async sendSMSMessage() {
+//     try {
+//       AWS.config.update({
+//         region: process.env.REGION,
+//         credentials: {
+//           accessKeyId: process.env.AWS_ACCESS_KEY, // AWS access key from environment variables
+//           secretAccessKey: process.env.AWS_SECRET_KEY // AWS secret key from environment variables
+//         }
+//       });
 //
 // // Create publish parameters
-//     var params = {
-//       Message: 'xxzcaq', /* required */
-//       PhoneNumber: '+62895627543357',
-//     };
+//       var params = {
+//         Message: 'you code 2512', /* required */
+//         PhoneNumber: '+62895627543357',
+//       };
 //
 // // Create promise and SNS service object
-//     var publishTextPromise = new AWS.SNS({apiVersion: '2010-03-31'}).publish(params).promise();
+//       var publishTextPromise = new AWS.SNS({apiVersion: '2015-03-31'}).publish(params).promise();
 //
 // // Handle promise's fulfilled/rejected states
-//     publishTextPromise.then(
-//         function(data) {
-//           console.log("MessageID is " + data.MessageId);
-//         }).catch(
-//         function(err) {
-//           console.error(err, err.stack);
-//         });
+//       publishTextPromise.then(
+//           function(data) {
+//             console.log("MessageID is " + data.MessageId);
+//           }).catch(
+//           function(err) {
+//             console.error(err, err.stack);
+//           });
+//     }catch (e){
+//
+//       console.log('filed========================================')
+//       console.log(e)
+//     }
+//     return "success";
+//
+//
 //   }
+
   // async sendSMSMessageTwillo(phone_number) {
   //
   //   const randomDigit = Math.floor(10000 + Math.random() * 99999);

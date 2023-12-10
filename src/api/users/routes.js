@@ -27,6 +27,15 @@ const routes = (handler) => [
   },
   {
     method: "GET",
+    path: "/users/{user_id}",
+    config: {
+      auth: "user_jwt",
+
+    },
+    handler: handler.getUserByIdHandler,
+  },
+  {
+    method: "GET",
     path: "/users",
     config: {
       auth: "user_jwt",
