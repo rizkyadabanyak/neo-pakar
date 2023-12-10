@@ -60,7 +60,7 @@ const routes = (handler) => [
   {
     method: "GET",
     path: '/testNO',  // The route parameter * allows for nested paths
-    handler: handler.sendEmailSNS,
+    handler: handler.sendEmailSubcriptionSNS,
   },
 ];
 

@@ -153,6 +153,20 @@ class CandidateDetailService {
 
     return setImgUser;
   }
+  async setCV(path_cv,user_id) {
+
+    const setCv = await CandidateDetail.update(
+        {
+          cv: path_cv,
+        },
+        {
+          where: {
+            user_id : user_id
+          }
+        }
+    );
+    return setCv;
+  }
 
   async updateCandidateDetail(payload,username,user_id) {
 
@@ -163,24 +177,19 @@ class CandidateDetailService {
 
     if (image_profile) {
       path_profile = await uploadFileHelper.upload(image_profile,"image_profile",username);
-    }else {
-      throw new InvariantError("file img profile tidak ada");
+      const setImgUser = await this.setImgUser(path_profile,user_id);
+
     }
 
     if (cv_file) {
       path_cv = await uploadFileHelper.upload(cv_file,"cv_file",username);
-    }else {
-      throw new InvariantError("cv file tidak ada");
+      const setCV = await this.setCV(path_cv,user_id);
+
     }
-
-
-    const setImgUser = await this.setImgUser(path_profile,user_id);
-    console.log(setImgUser)
 
     const setCandidateDetail = await CandidateDetail.update(
         {
           address: payload.address,
-          cv: path_cv,
           phone_number: payload.phone_number,
           description: payload.description,
           status_completed: true,

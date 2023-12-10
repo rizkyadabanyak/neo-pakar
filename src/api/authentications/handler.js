@@ -26,10 +26,32 @@ class AuthenticationsHandler {
     this.deleteAuthenticationHandler = this.deleteAuthenticationHandler.bind(this);
     this.fileHandler = this.fileHandler.bind(this);
     // this.sendSMSMessage = this.sendSMSMessage.bind(this);
-    this.sendEmailSNS = this.sendEmailSNS.bind(this);
+    this.sendEmailToConfirmSubcriptionSNS = this.sendEmailToConfirmSubcriptionSNS.bind(this);
+    this.sendEmailSubcriptionSNS = this.sendEmailSubcriptionSNS.bind(this);
   }
 
-  async sendEmailSNS() {
+  async sendEmailSubcriptionSNS() {
+    AWS.config.update({
+      region: process.env.REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY, // AWS access key from environment variables
+        secretAccessKey: process.env.AWS_SECRET_KEY // AWS secret key from environment variables
+      }
+    });
+
+    let params = {
+      Message: 'ini pesan',
+      Subject: 'ini subject',
+      TopicArn: 'arn:aws:sns:ap-southeast-1:161122433049:sendEmail'
+    };
+
+    sns.publish(params, function(err, data) {
+      if (err) console.log(err, err.stack);
+      else console.log(data);
+    });
+  }
+
+  async sendEmailToConfirmSubcriptionSNS(email) {
     AWS.config.update({
       region: process.env.REGION,
       credentials: {
@@ -41,7 +63,7 @@ class AuthenticationsHandler {
     let params = {
       Protocol: 'EMAIL',
       TopicArn: 'arn:aws:sns:ap-southeast-1:161122433049:sendEmail',
-      Endpoint: "riskipatra4@gmail.com"
+      Endpoint: email
     };
 
     sns.subscribe(params, (err, data) => {
@@ -52,6 +74,7 @@ class AuthenticationsHandler {
       }
     });
   }
+
 //   async sendSMSMessage() {
 //     try {
 //       AWS.config.update({
@@ -169,6 +192,8 @@ class AuthenticationsHandler {
       const { name,username,confPassword , email,address, password,phone_number,as,role_id } = request.payload;
 
       // this.sendSMSMessageTwillo(phone_number);
+
+      await this.sendEmailToConfirmSubcriptionSNS(email);
 
       const data = await this._usersService.addUser({ name,username,confPassword , email,address, password,as,role_id,phone_number});
 

@@ -7,7 +7,7 @@ const CompanyDetailPayloadSchema = Joi.object({
   phone_number: Joi.number()
       .required(),
   about_company: Joi.string(),
-  logo_company: Joi.any().required(),
+  logo_company: Joi.any()
 });
 
 

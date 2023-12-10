@@ -160,11 +160,9 @@ class CompanyDetailService {
 
     if (logo_company) {
       path_logo_company = await uploadFileHelper.upload(logo_company,"logo_company",username);
-    }else {
-      throw new InvariantError("file img profile tidak ada");
-    }
+      const setImgUser = await this.setImgUser(path_logo_company,user_id);
 
-    const setImgUser = await this.setImgUser(path_logo_company,user_id);
+    }
     // console.log(setImgUser)
     //
     // return ;

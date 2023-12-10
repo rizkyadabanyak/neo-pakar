@@ -7,8 +7,8 @@ const CandidateDetailPayloadSchema = Joi.object({
   phone_number: Joi.number()
       .required(),
   description: Joi.string(),
-  image_profile: Joi.any().required(),
-  cv_file: Joi.any().required(),
+  image_profile: Joi.any(),
+  cv_file: Joi.any(),
 });
 
 const CandidateDetailAddSkillPayloadSchema = Joi.object({
