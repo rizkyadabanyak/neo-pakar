@@ -32,15 +32,32 @@ class CandidateDetailService {
           // attributes:['name','slug'],
           include:[
             {
-              association:'company_detail',
-              attributes:['id','address'],
-              include:[
-                {
-                  association:'user',
-                  attributes:['img','full_name'],
-                }
-              ]
-            }
+              association: 'job_type_work',
+              attributes : ['name'],
+            }, {
+              association: 'qualification',
+              attributes : ['name']
+            },{
+              association: 'career_level',
+              attributes : ['name']
+            },{
+              association: 'time_experiences',
+              attributes : ['name']
+            },{
+              association: 'time_experiences',
+              attributes : ['name']
+            },{
+              association: 'Skill',
+              attributes : ['name','slug']
+            },{
+              association: 'company_detail',
+              attributes : ['address','about_company'],
+              include :[{
+                association: 'user',
+                attributes : ['full_name','img'],
+
+              }]
+            },
           ]
         },
         {
