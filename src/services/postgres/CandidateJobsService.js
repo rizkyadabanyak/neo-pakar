@@ -146,6 +146,7 @@ class CandidateDetailService {
   }
 
   async convertSlugToIdJob(slug) {
+    var dateNow = new Date();
 
     const data = await Job.findOne({
       where:{
@@ -153,14 +154,22 @@ class CandidateDetailService {
       }
     });
 
+    var dateJob = new Date(data.end_date);
+
     if (!data){
       throw new InvariantError("Job tidak ada");
+
+    }
+
+    if (dateNow > dateJob){
+      throw new InvariantError("Pendaftaran Job sudah di tutup");
 
     }
     return data.id;
   }
 
   async verifApplyJobs(job_id,detail_candidate_id,type_request) {
+
 
     const data = await combination_candidate_jobs.findOne({
       where:{
@@ -439,6 +448,7 @@ class CandidateDetailService {
 
     await this.verifApplyJobs(job_id,detail_candidate_id,type_request)
 
+    // return 'sini';
     try {
 
       const data = await combination_candidate_jobs.create({
