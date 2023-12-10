@@ -72,6 +72,14 @@ const routes = (handler) => {
       },
       handler: handler.showApplyJobsHandler,
     },
+    {
+      method: "GET",
+      path: "/candidateJob/detail/{candidate_job_id}",
+      config: {
+        auth: "user_jwt",
+      },
+      handler: handler.detailLamaranHandler,
+    },
 
   ];
 };

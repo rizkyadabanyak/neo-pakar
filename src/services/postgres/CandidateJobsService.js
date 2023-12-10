@@ -19,6 +19,46 @@ const CandidateDetail = db.CandidateDetail;
 
 class CandidateDetailService {
 
+  async detailLamaran(candidate_job_id) {
+
+    const data = await combination_candidate_jobs.findOne({
+      where: {
+        id : candidate_job_id
+      },
+      attributes:['id','job_id','candidate_id','status','type_request','createdAt'],
+      include:[
+        {
+          association: 'job',
+          // attributes:['name','slug'],
+          include:[
+            {
+              association:'company_detail',
+              attributes:['id','address'],
+              include:[
+                {
+                  association:'user',
+                  attributes:['img','full_name'],
+                }
+              ]
+            }
+          ]
+        },
+        {
+          association : 'CandidateDetail',
+          include:{
+            association:'user',
+            attributes:['img','full_name'],
+          }
+        }
+      ],
+    });
+    if (!data){
+      throw new InvariantError("Belum melengkapi cadidate detail");
+
+    }
+
+    return data;
+  }
   async cekCandidateDetail(user_id) {
     const data = await User.findOne({
       attributes : ['username','email','full_name','img',],
