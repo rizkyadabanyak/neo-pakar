@@ -16,6 +16,41 @@ class rolesHandler {
 
     this.getCompanyDetailHandler = this.getCompanyDetailHandler.bind(this);
     this.updatecompanyDetailHandler = this.updatecompanyDetailHandler.bind(this);
+    this.getCountJobHandler = this.getCountJobHandler.bind(this);
+  }
+  async getCountJobHandler(request, h) {
+    try {
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+      const decode_user_id= decodeJwt.id;
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_show_detail_profile_company"])
+
+      const data = await this._service.getCountJob(decode_user_id)
+
+      return {
+        status: "success",
+        data: data,
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
   }
   async getCompanyDetailHandler(request, h) {
     try {

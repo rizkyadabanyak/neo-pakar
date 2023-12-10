@@ -20,6 +20,13 @@ const routes = (handler) => {
         auth: "user_jwt",
       },
       handler: handler.getCompanyDetailHandler,
+    },{
+      method: "GET",
+      path: "/companyDetail/getCountJob",
+      config: {
+        auth: "user_jwt",
+      },
+      handler: handler.getCountJobHandler,
     },
   ];
 };

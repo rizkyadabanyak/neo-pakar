@@ -70,6 +70,58 @@ class CompanyDetailService {
     }
   }
 
+  async getCountJob(user_id) {
+    var dateNow = new Date();
+
+
+
+    // return  tanggalSekarang;
+    const company = await CompanyDetail.findOne({
+      where : {
+        user_id : user_id
+      }
+    })
+
+    // return company;
+    try {
+      // const total_job = await Job.count({
+      //   where: {
+      //     company_detail_id : company.id,
+      //     status: true
+      //   },
+      //   col: 'company_detail_id'
+      // })
+
+      const all_jobs = await Job.findAll({
+        where: {
+          company_detail_id : company.id,
+          status: true
+        },
+      })
+
+
+      var total_job_before_end = 0;
+      all_jobs.forEach(function(element) {
+        var dateJob = new Date(element.end_date); // November memiliki indeks 10
+        console.log('ini date now :' + dateNow);
+        console.log('ini date job :' + dateJob);
+        if (dateNow < dateJob) {
+          total_job_before_end++;
+          console.log('lebih kecil')
+        }
+      });
+
+      return {
+        total_job_active_before_job_end : total_job_before_end,
+        total_all_job : all_jobs.length,
+      };
+
+    }catch (e) {
+      console.log(e)
+      throw new InvariantError("data job company gagal diload");
+    }
+
+  }
   async getCompanyDetail(user_id) {
     try {
       const data = await User.findOne({
