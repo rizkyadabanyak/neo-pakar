@@ -19,6 +19,7 @@ class jobsHandler {
     this.getJobBySlugHandler = this.getJobBySlugHandler.bind(this);
     this.updateJobHandler = this.updateJobHandler.bind(this);
     this.deleteByIdHandler = this.deleteByIdHandler.bind(this);
+    this.getListCandidateHandler = this.getListCandidateHandler.bind(this);
   }
 
   async storeJobHandler(request, h) {
@@ -178,6 +179,43 @@ class jobsHandler {
     }
   }
 
+  async getListCandidateHandler(request, h) {
+    try {
+      const { job_id } = request.params;
+
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_all_operate_job","can_show_job"])
+      const { page,size,search,status,type_request } = request.query;
+
+      const data = await this._service.getListCandidate(page,size,search,status,type_request,job_id)
+
+      return {
+        status: "success",
+        data: data,
+      };
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
   async getJobByIdHandler(request, h) {
     try {
       const { job_id } = request.params;

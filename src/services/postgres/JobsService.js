@@ -15,6 +15,7 @@ const Op = Sequelize.Op;
 const CombinationJobSkill = db.combination_job_skills;
 const paginationHelper = require("../../helpers/paginationHelper");
 
+const combination_candidate_jobs = db.combination_candidate_jobs;
 
 
 class JobsService {
@@ -374,6 +375,90 @@ class JobsService {
     }
   }
 
+  async getListCandidate(page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp,job_id) {
+
+    // const data = await combination_candidate_jobs.findAll({
+    //   include: [
+    //     {
+    //       association: 'CandidateDetail',
+    //       include:[
+    //         {
+    //           association:'user',
+    //           attributes:['img','full_name'],
+    //         }
+    //       ]
+    //     },
+    //   ],
+    //   where: { job_id: job_id }
+    // });
+
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const status = status_tmp || '';
+    const type_request = type_request_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
+
+    let condition = null;
+
+    if (status && type_request){
+      condition = {
+        [Op.and]: {
+          status : status,
+          type_request : type_request,
+          job_id : job_id
+        },
+      };
+
+    }else if (type_request){
+      condition = {
+        [Op.and]: {
+          type_request : type_request,
+          job_id : job_id
+
+        },
+      };
+
+    }else if (status){
+
+      condition = {
+        [Op.and]: {
+          status : status,
+          job_id : job_id
+        },
+      };
+
+    }else {
+      condition = null
+    }
+
+    try {
+
+      const models = await combination_candidate_jobs.findAndCountAll({
+        where: condition,
+        include :[
+          {
+            association: 'CandidateDetail',
+            include:[
+              {
+                association:'user',
+                attributes:['img','full_name'],
+              }
+            ],
+          }
+        ],
+        limit,
+        offset,
+      });
+
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
+    }catch (e) {
+      console.log(e)
+      throw new NotFoundError("terjadi kesalahan");
+
+    }
+  }
   async getJobById(id) {
     const data = await Job.findOne({
       include: [
