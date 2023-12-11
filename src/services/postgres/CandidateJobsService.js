@@ -64,7 +64,7 @@ class CandidateDetailService {
           association : 'CandidateDetail',
           include:{
             association:'user',
-            attributes:['img','full_name'],
+            // attributes:['img','full_name'],
           }
         }
       ],
