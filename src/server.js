@@ -1,5 +1,7 @@
 'use strict';
 // mengimpor dotenv dan menjalankan konfigurasinya
+const schedule = require('node-schedule');
+
 require("dotenv").config();
 const Path = require('path');
 const Hapi = require("@hapi/hapi");
@@ -261,6 +263,14 @@ const init = async () => {
 
     await server.start();
     console.log(`Server berjalan pada ${server.info.uri}`);
+
+    // '* * * * *'  setiap menit
+    // '0 0 * * 0'  setiap satu minggu sekali
+
+    const job = schedule.scheduleJob('* * * * *', function(){
+        console.log('Job has been triggered at: ');
+    })
+
 };
 
 init();

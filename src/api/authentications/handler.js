@@ -62,7 +62,11 @@ class AuthenticationsHandler {
     });
 
     let params = {
-      Message: 'ini pesan',
+      Message: `
+      <h5>ini test2</h5>
+      <h5>ini test2</h5>
+      
+      `,
       Subject: 'ini subject',
       TopicArn: 'arn:aws:sns:ap-southeast-1:161122433049:sendEmail'
     };

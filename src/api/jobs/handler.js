@@ -15,6 +15,7 @@ class jobsHandler {
 
     this.storeJobHandler = this.storeJobHandler.bind(this);
     this.getAllJobHandler = this.getAllJobHandler.bind(this);
+    this.getRecommendationHandler = this.getRecommendationHandler.bind(this);
     this.getJobByIdHandler = this.getJobByIdHandler.bind(this);
     this.getJobBySlugHandler = this.getJobBySlugHandler.bind(this);
     this.updateJobHandler = this.updateJobHandler.bind(this);
@@ -115,6 +116,51 @@ class jobsHandler {
     }
   }
 
+  async getRecommendationHandler(request, h) {
+
+    try {
+      const { page,size,search,career_levels,job_type_works,skill } = request.query;
+
+
+
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+      const user_id = decodeJwt.id;
+      const as_role = decodeJwt.as;
+
+      let data;
+
+      data = await this._service.getJobRecommendation(user_id,page,size,search,career_levels,job_type_works,skill);
+
+
+
+
+      return {
+        status: "success",
+        data: data,
+      };
+
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
   async getAllJobHandler(request, h) {
 
     try {

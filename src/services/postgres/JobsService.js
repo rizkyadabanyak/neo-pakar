@@ -8,6 +8,7 @@ const slug = require("slug");
 const db = require("../../models");
 const Job = db.Job;
 const CompanyDetail = db.CompanyDetail;
+const CandidateDetail = db.CandidateDetail;
 const User = db.User;
 const Skill = db.Skill;
 const Sequelize = require('sequelize');
@@ -237,8 +238,141 @@ class JobsService {
       throw new InvariantError("ini bukan job anda");
     }
   }
+  async getJobRecommendation(user_id,page_tmp,size_tmp,search_tmp,career_levels_tmp,job_type_works_tmp,skill_tmp) {
+
+    const getCandidateDetail = await CandidateDetail.findOne({
+      where :{
+        user_id : user_id
+      }
+    });
+
+    const getLamaran =  await combination_candidate_jobs.findAll({
+      where : {
+        [Op.and]: {
+          candidate_id : getCandidateDetail.id,
+          status : 'processed'
+        }
+
+      },
+      // attributes: ['job_id']
+    });
+    // return  getLamaran;
+
+    var tmp = [];
+
+    getLamaran.forEach(function(element) {
+      console.log('sinii === '+element.job_id);
+      tmp.push(element.job_id);
+    });
+    console.log('sini============' +getLamaran.length )
+    // return tmp;
 
 
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const career_levels = career_levels_tmp || '';
+    const job_type_works = job_type_works_tmp || '';
+    const skill = skill_tmp || '';
+
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
+
+    try {
+      const conditionSkill = skill
+          ? {
+            [Op.and]: {
+              id : skill,
+              // status : true
+            },
+
+          }
+          : null;
+
+      let models,condition;
+
+      condition = search
+          ? {
+            [Op.and]: {
+              name: { [Op.iLike]: `%${search}%` },
+              id : {[Op.notIn]: tmp },
+              status : true
+            },
+          }
+          : {
+            status : true,
+            id : {[Op.notIn]: tmp }
+
+          };
+
+      let condition_career_level,condition_job_type_works ;
+
+      if (career_levels&&job_type_works){
+        condition_career_level = {
+          id:career_levels
+        }
+        condition_job_type_works = {
+          id: job_type_works
+        }
+      }else if (career_levels){
+        // console.log('sini')
+        condition_career_level = {
+          id:career_levels
+        }
+      }else if (job_type_works){
+        condition_job_type_works = {
+          id: job_type_works
+        }
+      }else {
+        condition_career_level= null;
+        condition_job_type_works= null;
+      }
+
+      models = await Job.findAndCountAll({
+        include:[
+          {
+            association: 'job_type_work',
+            attributes : ['id','name'],
+            where:condition_job_type_works
+
+          }, {
+            association: 'qualification',
+            attributes : ['name']
+          },{
+            association: 'career_level',
+            attributes : ['id','name'],
+            where:condition_career_level
+          },{
+            association: 'time_experiences',
+            attributes : ['name']
+          },{
+            association: 'time_experiences',
+            attributes : ['name']
+          },{
+            association: 'company_detail',
+            attributes : ['address','about_company'],
+            include :[{
+              association: 'user',
+              attributes : ['full_name','img'],
+
+            }]
+          },{
+            association: 'Skill',
+            where : conditionSkill
+          }
+        ],
+        distinct: true,
+        where: condition,
+        limit,
+        offset,
+      });
+
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
+    }catch (e) {
+      console.log(e)
+      throw new NotFoundError("terjadi kesalahan");
+    }
+  }
   async getJobAll(as,page_tmp,size_tmp,search_tmp,career_levels_tmp,job_type_works_tmp,skill_tmp) {
     let role;
 

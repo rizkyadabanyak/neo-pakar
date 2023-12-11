@@ -63,6 +63,14 @@ const routes = (handler) => {
       },
       handler: handler.getAllJobHandler,
     },
+    {
+      method: "GET",
+      path: "/jobs/recommendation",
+      config: {
+        auth: "user_jwt",
+      },
+      handler: handler.getRecommendationHandler,
+    },
   ];
 };
 
