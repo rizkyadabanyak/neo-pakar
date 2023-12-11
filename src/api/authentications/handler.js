@@ -30,6 +30,28 @@ class AuthenticationsHandler {
     this.sendEmailSubcriptionSNS = this.sendEmailSubcriptionSNS.bind(this);
   }
 
+  async sendEmailRegisterToAdminSNS(name_user,role_id) {
+    AWS.config.update({
+      region: process.env.REGION,
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY, // AWS access key from environment variables
+        secretAccessKey: process.env.AWS_SECRET_KEY // AWS secret key from environment variables
+      }
+    });
+
+    console.log(role_id)
+
+    let params = {
+      Message: name_user+' baru saja mendaftar ',
+      Subject: 'New user register',
+      TopicArn: 'arn:aws:sns:ap-southeast-1:161122433049:sendEmailAdmin'
+    };
+
+    sns.publish(params, function(err, data) {
+      if (err) console.log(err, err.stack);
+      else console.log(data);
+    });
+  }
   async sendEmailSubcriptionSNS() {
     AWS.config.update({
       region: process.env.REGION,
@@ -193,9 +215,10 @@ class AuthenticationsHandler {
 
       // this.sendSMSMessageTwillo(phone_number);
 
-      await this.sendEmailToConfirmSubcriptionSNS(email);
-
       const data = await this._usersService.addUser({ name,username,confPassword , email,address, password,as,role_id,phone_number});
+
+      await this.sendEmailToConfirmSubcriptionSNS(email);
+      await this.sendEmailRegisterToAdminSNS(name,role_id);
 
       const response = h.response({
         status: "success",
