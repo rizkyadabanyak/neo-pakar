@@ -451,6 +451,9 @@ class CandidateDetailService {
     // return 'sini';
     try {
 
+      let itung ;
+
+
       const data = await combination_candidate_jobs.create({
         job_id: job_id,
         candidate_id:detail_candidate_id,
@@ -459,10 +462,28 @@ class CandidateDetailService {
         type_request: type_request,
       });
 
+      const getJob = await Job.findOne({
+        where:{
+          id : job_id,
+        }
+      });
+
+      itung = getJob.count_apply_job;
+      itung++;
+
+
+      const updateCount =  await Job.update({
+        count_apply_job : itung
+      },{
+        where:{
+          id : job_id,
+        }
+      });
+
       return data;
     }catch (e) {
       console.log(e)
-      throw new InvariantError("candidates detail gagal ditambahkan");
+      throw new InvariantError("gagal apply job");
     }
   }
   async cekJobCompany(candidate_job_id,company_detail_id) {
