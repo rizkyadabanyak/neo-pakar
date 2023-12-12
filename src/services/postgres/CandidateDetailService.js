@@ -19,23 +19,40 @@ const Op = Sequelize.Op;
 class CandidateDetailService {
   async verifySkill(skill ) {
 
-    for (let i=0;i<skill.length;i++){
-      // console.log(i);
-      let data = await Skill.findOne({
+    // console.log(skill.length);
+    // return ;
+
+    skill.forEach(function (param){
+      let data = Skill.findOne({
         where:{
-          id : skill[i]
+          id : param
         }
       });
 
       if (!data) {
         throw new NotFoundError("Skill tidak ditemukan");
       }
-    }
+    })
 
+
+    // for (let i=0;i<skill.length;i++){
+    //   // console.log(i);
+    //
+    //
+    //   console.log(data)
+    //   console.log('itung = '+ skill[i])
+    //   // if (!data) {
+    //   //   throw new NotFoundError("Skill tidak ditemukan");
+    //   // }
+    // }
+
+    // return;
   }
   async addSkillCandidate(skill,candidate_id) {
 
+    // return skill;
     await this.verifySkill(skill);
+
     try {
 
       const candidate_tmp = await CandidateDetail.findOne({
