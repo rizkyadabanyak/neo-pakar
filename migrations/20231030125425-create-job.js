@@ -82,6 +82,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
+      count_apply_job: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
       status: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,

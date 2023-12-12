@@ -373,7 +373,7 @@ class JobsService {
       throw new NotFoundError("terjadi kesalahan");
     }
   }
-  async getJobAll(as,page_tmp,size_tmp,search_tmp,career_levels_tmp,job_type_works_tmp,skill_tmp) {
+  async getJobAll(as,page_tmp,size_tmp,search_tmp,career_levels_tmp,job_type_works_tmp,skill_tmp,order_by_tmp) {
     let role;
 
 
@@ -390,10 +390,26 @@ class JobsService {
     const career_levels = career_levels_tmp || '';
     const job_type_works = job_type_works_tmp || '';
     const skill = skill_tmp || '';
+    const orderBy = order_by_tmp || '';
 
     const { limit, offset } = await paginationHelper.getPagination(page, size);
 
     try {
+      // const conditionOrdyBy = orderBy
+      //     ? [['count_apply_job', 'DESC']]
+      //     : null;
+
+      let conditionOrderBy;
+
+      if (orderBy == 'updates'){
+        conditionOrderBy = [['updatedAt', 'DESC']]
+      }else if (orderBy == 'popular'){
+        conditionOrderBy =[['count_apply_job', 'DESC']]
+      }else {
+        conditionOrderBy = null;
+      }
+
+
       const conditionSkill = skill
           ? {
             id: skill,
@@ -463,13 +479,15 @@ class JobsService {
       }
 
       models = await Job.findAndCountAll({
+
         include:[
           {
             association: 'job_type_work',
             attributes : ['id','name'],
             where:condition_job_type_works
 
-          }, {
+          },
+          {
             association: 'qualification',
             attributes : ['name']
           },{
@@ -493,12 +511,18 @@ class JobsService {
           },{
             association: 'Skill',
             where : conditionSkill
+          },
+          {
+           association : 'combinationCandidateJobs'
           }
         ],
         distinct: true,
         where: condition,
         limit,
         offset,
+        order: conditionOrderBy,
+        // group: ['"Job"."id"'],
+        // group: ['combinationCandidateJobs.job_id'], // Group by the user ID
       });
 
       const response = paginationHelper.getPagingData(models, page, limit);

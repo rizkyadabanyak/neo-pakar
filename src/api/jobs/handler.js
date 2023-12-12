@@ -121,8 +121,6 @@ class jobsHandler {
     try {
       const { page,size,search,career_levels,job_type_works,skill } = request.query;
 
-
-
       const header = request.headers.authorization;
       const decodeJwt = decodeJWTHelper.decode(header);
       const decode_role_id = decodeJwt.role_id;
@@ -133,14 +131,10 @@ class jobsHandler {
 
       data = await this._service.getJobRecommendation(user_id,page,size,search,career_levels,job_type_works,skill);
 
-
-
-
       return {
         status: "success",
         data: data,
       };
-
     } catch (error) {
       if (error instanceof ClientError) {
         const response = h.response({
@@ -164,7 +158,7 @@ class jobsHandler {
   async getAllJobHandler(request, h) {
 
     try {
-      const { page,size,search,career_levels,job_type_works,skill } = request.query;
+      const { page,size,search,career_levels,job_type_works,skill,order_by } = request.query;
 
 
 
@@ -183,17 +177,17 @@ class jobsHandler {
 
         await permissionsHelper.cekPermission(decode_role_id,["can_all_company_behavior","can_all_operate_job","can_show_job"])
 
-        data = await this._service.getJobAll(company_detail,page,size,search,career_levels,job_type_works,skill);
+        data = await this._service.getJobAll(company_detail,page,size,search,career_levels,job_type_works,skill,order_by);
 
       }else if (as_role == "admin") {
 
         await permissionsHelper.cekPermission(decode_role_id,["can_all_operate_job","can_show_job"])
 
-        data = await this._service.getJobAll(as_role,page,size,search,career_levels,job_type_works,skill);
+        data = await this._service.getJobAll(as_role,page,size,search,career_levels,job_type_works,skill,order_by);
 
       }else {
 
-        data = await this._service.getJobAll(as_role,page,size,search,career_levels,job_type_works,skill);
+        data = await this._service.getJobAll(as_role,page,size,search,career_levels,job_type_works,skill,order_by);
 
       }
 

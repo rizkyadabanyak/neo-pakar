@@ -36,6 +36,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "time_experiences",
       });
 
+      this.hasMany(models.combination_candidate_jobs, {
+        foreignKey: "job_id",
+        as: "combinationCandidateJobs",
+      });
+
       this.belongsToMany(models.Skill, {
         through: "combination_job_skills",
         foreignKey: "job_id",
@@ -50,6 +55,13 @@ module.exports = (sequelize, DataTypes) => {
         as: "CandidateDetail",
       });
 
+
+      // this.hasMany(models.Skill, {
+      //   through: "combination_job_skills",
+      //   foreignKey: "job_id",
+      //   otherKey: "skill_id",
+      //   as: "Skill",
+      // });
     }
   }
   Job.init({
@@ -85,6 +97,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     salary_min: {
+      type: DataTypes.INTEGER
+    },
+    count_apply_job: {
       type: DataTypes.INTEGER
     },
     status: {
