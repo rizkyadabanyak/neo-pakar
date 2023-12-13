@@ -10,6 +10,8 @@ const Job = db.Job;
 const Skill = db.Skill;
 const User = db.User;
 const paginationHelper = require("../../helpers/paginationHelper");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 class CandidatesService {
 
