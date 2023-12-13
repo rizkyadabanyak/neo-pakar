@@ -19,6 +19,78 @@ const CandidateDetail = db.CandidateDetail;
 
 class CandidateDetailService {
 
+  async detailLamaranListCandidate(job_id,page_tmp,size_tmp,search_tmp,status_tmp,type_request_tmp) {
+    const page = page_tmp || 0;
+    const size = size_tmp || 10;
+    const search = search_tmp || '';
+    const status = status_tmp || '';
+    const type_request = type_request_tmp || '';
+    const { limit, offset } = await paginationHelper.getPagination(page, size);
+
+
+
+    let condition = null;
+
+    if (status && type_request){
+      condition = {
+        [Op.and]: {
+          status : status,
+          type_request : type_request,
+          job_id: job_id
+        },
+      };
+
+    }else if (type_request){
+      condition = {
+        [Op.and]: {
+          type_request : type_request,
+          job_id: job_id
+        },
+      };
+    }else if (status){
+      condition = {
+        [Op.and]: {
+          status : status,
+          job_id: job_id
+        },
+      };
+    }else {
+      condition = {
+        [Op.and]: {
+          job_id: job_id
+        },
+      };
+    }
+
+
+    try {
+
+      const models = await combination_candidate_jobs.findAndCountAll({
+        where: condition,
+        // distinct : true,
+        attributes: ['id', 'job_id', 'candidate_id', 'status', 'type_request', 'createdAt'],
+        include: [
+          {
+            association: 'CandidateDetail',
+            include: {
+              association: 'user',
+
+              // attributes:['img','full_name'],
+            }
+          }
+        ],
+        limit,
+        offset,
+      });
+
+      const response = paginationHelper.getPagingData(models, page, limit);
+      return response;
+    }catch (e) {
+      throw new InvariantError("Belum melengkapi cadidate detail");
+
+    }
+    return data;
+  }
   async detailLamaran(candidate_job_id) {
 
     const data = await combination_candidate_jobs.findOne({

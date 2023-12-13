@@ -21,6 +21,7 @@ class candidateJobsHandler {
     this.showApplyJobsHandler = this.showApplyJobsHandler.bind(this);
     this.candidateAcceptedAppliedHandler = this.candidateAcceptedAppliedHandler.bind(this);
     this.detailLamaranHandler = this.detailLamaranHandler.bind(this);
+    this.detailLamaranlistCandidateHandler = this.detailLamaranlistCandidateHandler.bind(this);
   }
   async candidateAcceptedAppliedHandler(request, h) {
     try {
@@ -322,6 +323,54 @@ class candidateJobsHandler {
       // return h.response({
       //   status: "success",
       //   message: cek_detai,
+      // });
+
+      const response = h.response({
+        status: "success",
+        message: "berhasilkan menampilkan data",
+        data: data,
+      });
+
+      response.code(200);
+      return response;
+
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kasmi test.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
+  async detailLamaranlistCandidateHandler(request, h) {
+    try {
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+      const decode_user_id= decodeJwt.id;
+      const decode_username_as= decodeJwt.username_as
+      const decode_as= decodeJwt.as
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_all_company_behavior","can_show_apply_job_candidate","can_show_apply_job_company_behavior"])
+      const { job_id } = request.params;
+      const { page,size,search,status,type_request } = request.query;
+
+      const data = await this._service.detailLamaranListCandidate(job_id,page,size,search,status,type_request)
+
+      // return h.response({
+      //   status: "success",
+      //   message: candidate_job_id,
       // });
 
       const response = h.response({

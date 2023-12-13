@@ -80,6 +80,14 @@ const routes = (handler) => {
       },
       handler: handler.detailLamaranHandler,
     },
+    {
+      method: "GET",
+      path: "/candidateJob/listCandidate/{job_id}",
+      config: {
+        auth: "user_jwt",
+      },
+      handler: handler.detailLamaranlistCandidateHandler,
+    },
 
   ];
 };
