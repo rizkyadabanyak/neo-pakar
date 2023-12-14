@@ -204,6 +204,20 @@ class CandidateDetailService {
 
     }
 
+    if (payload.full_name){
+
+      const user = await User.update(
+          {
+            full_name : payload.full_name
+          },{
+            where:{
+              id : user_id
+            }
+
+          }
+      )
+    }
+
     const setCandidateDetail = await CandidateDetail.update(
         {
           address: payload.address,

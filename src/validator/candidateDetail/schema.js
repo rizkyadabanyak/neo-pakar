@@ -9,6 +9,7 @@ const CandidateDetailPayloadSchema = Joi.object({
   description: Joi.string(),
   image_profile: Joi.any(),
   cv_file: Joi.any(),
+  full_name: Joi.string(),
 });
 
 const CandidateDetailAddSkillPayloadSchema = Joi.object({
