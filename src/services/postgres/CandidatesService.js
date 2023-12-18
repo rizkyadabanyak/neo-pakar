@@ -56,7 +56,7 @@ class CandidatesService {
         where: conditionUser,
         distinct: true,
         // col: 'User.id',
-        attributes : ['id','username','email','full_name'],
+        attributes : ['id','username','email','full_name','img'],
         include: [
           {
             association: 'candidate_detail',
