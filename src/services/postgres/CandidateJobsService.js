@@ -641,7 +641,6 @@ class CandidateDetailService {
 
     const cek = await this.cekOfferCandidate(candidate_job_id,detail_candidate_id)
 
-    return ;
     try {
 
       const data = await combination_candidate_jobs.update(
