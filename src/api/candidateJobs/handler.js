@@ -211,6 +211,10 @@ class candidateJobsHandler {
       const response = h.response({
         status: "success",
         message: "berhasil merubah status",
+        auth: {
+          candidate_job_id : candidate_job_id,
+          detail_candidate_id : detail_candidate_id
+        },
         data: data,
       });
       response.code(201);
