@@ -97,7 +97,7 @@ class CandidateDetailService {
       where: {
         id : candidate_job_id
       },
-      attributes:['id','job_id','candidate_id','status','type_request','createdAt'],
+      attributes:['id','job_id','candidate_id','status','type_request','withdraw','createdAt'],
       include:[
         {
           association: 'job',
@@ -638,8 +638,6 @@ class CandidateDetailService {
   }
 
   async withdraw(candidate_job_id,detail_candidate_id,status) {
-
-    const cek = await this.cekOfferCandidate(candidate_job_id,detail_candidate_id)
 
     try {
 
