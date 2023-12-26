@@ -637,6 +637,36 @@ class CandidateDetailService {
 
   }
 
+  async withdraw(candidate_job_id,detail_candidate_id,status) {
+
+    const cek = await this.cekOfferCandidate(candidate_job_id,detail_candidate_id)
+
+    try {
+
+      const data = await combination_candidate_jobs.update(
+          {
+            withdraw: status,
+          },
+          {
+            where: {
+              id : candidate_job_id,
+            }
+          }
+      );
+
+      const show = await combination_candidate_jobs.findOne({
+        where:{
+          id : candidate_job_id,
+
+        }
+      });
+
+      return show;
+    }catch (e) {
+      console.log(e)
+      throw new InvariantError("gagal withdraw");
+    }
+  }
   async acceptOffers(candidate_job_id,detail_candidate_id,status) {
 
     const cek = await this.cekOfferCandidate(candidate_job_id,detail_candidate_id)

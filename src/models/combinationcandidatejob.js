@@ -37,6 +37,9 @@ module.exports = (sequelize, DataTypes) => {
     description: {
       type: DataTypes.TEXT,
     },
+    withdraw: {
+      type: DataTypes.BOOLEAN,
+    },
   }, {
     sequelize,
     modelName: 'combination_candidate_jobs',

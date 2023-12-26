@@ -17,6 +17,7 @@ class candidateJobsHandler {
     this.applyJobsHandler = this.applyJobsHandler.bind(this);
     this.acceptApplicationsHandler = this.acceptApplicationsHandler.bind(this);
     this.acceptOffersHandler = this.acceptOffersHandler.bind(this);
+    this.withdrawHandler = this.withdrawHandler.bind(this);
     this.givenOfferHandler = this.givenOfferHandler.bind(this);
     this.showApplyJobsHandler = this.showApplyJobsHandler.bind(this);
     this.candidateAcceptedAppliedHandler = this.candidateAcceptedAppliedHandler.bind(this);
@@ -156,6 +157,59 @@ class candidateJobsHandler {
       const response = h.response({
         status: "success",
         message: "berhasil merubah status",
+        data: data,
+      });
+      response.code(201);
+      return response;
+
+    } catch (error) {
+      if (error instanceof ClientError) {
+        const response = h.response({
+          status: "failed",
+          message: error.message,
+        });
+        response.code(error.statusCode);
+        return response;
+      }
+
+      // Server ERROR!
+      const response = h.response({
+        status: "error",
+        message: "Maaf, terjadi kegagalan pada server kami.",
+      });
+      response.code(500);
+      console.error(error);
+      return response;
+    }
+  }
+  async withdrawHandler(request, h) {
+    try {
+      const header = request.headers.authorization;
+      const decodeJwt = decodeJWTHelper.decode(header);
+      const decode_role_id = decodeJwt.role_id;
+      const decode_user_id= decodeJwt.id;
+      const decode_username_as= decodeJwt.username_as
+      const { candidate_job_id } = request.query;
+      const { status } = request.payload;
+      await permissionsHelper.cekPermission(decode_role_id,["can_all_candidate_behavior","can_accept_offer_candidate"])
+
+      const candidate_detail = await this._service.cekCandidateDetail(decode_user_id)
+      const detail_candidate_id = candidate_detail.candidate_detail.id;
+
+      this._validator.validateAcceptApplicationPayload({candidate_job_id, status});
+
+
+      const data = await this._service.withdraw(candidate_job_id,detail_candidate_id,status)
+
+      // const { name, description } = request.payload;
+
+      const response = h.response({
+        status: "success",
+        message: "berhasil withdraw",
+        auth: {
+          candidate_job_id : candidate_job_id,
+          detail_candidate_id : detail_candidate_id
+        },
         data: data,
       });
       response.code(201);
