@@ -306,7 +306,7 @@ class CandidateDetailService {
 
       const models = await combination_candidate_jobs.findAndCountAll({
         where: condition,
-        attributes:['id','job_id','candidate_id','status','type_request','createdAt'],
+        attributes:['id','job_id','candidate_id','status','type_request','withdraw','createdAt'],
         include:[
           {
             association: 'job',
